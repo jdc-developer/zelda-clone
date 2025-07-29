@@ -3,7 +3,6 @@ package jdc.zelda.graphics;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.net.URL;
 
 public class Spritesheet {
 
@@ -13,8 +12,7 @@ public class Spritesheet {
 
     public Spritesheet(String path) {
         try {
-            URL url = getClass().getResource(path);
-            spritesheet = ImageIO.read(getClass().getResource(path));
+            spritesheet = ImageIO.read(getClass().getResourceAsStream(path));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

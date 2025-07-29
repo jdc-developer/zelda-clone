@@ -1,5 +1,6 @@
 package jdc.zelda;
 
+import jdc.zelda.commands.KeyboardCommands;
 import jdc.zelda.entities.Entity;
 import jdc.zelda.entities.Player;
 import jdc.zelda.graphics.Spritesheet;
@@ -24,6 +25,7 @@ public class ZeldaGame extends Canvas implements Runnable {
 
     public List<Entity> entities;
     public Spritesheet spritesheet;
+    public Player player;
 
     public ZeldaGame() {
         setPreferredSize(new Dimension(WIDTH * SCALE, HEIGHT * SCALE));
@@ -32,7 +34,9 @@ public class ZeldaGame extends Canvas implements Runnable {
         entities = new ArrayList<>();
         spritesheet = new Spritesheet("/spritesheet.png");
 
-        Player player = new Player(0, 0, 90.0f, 97.5f, spritesheet.getSprite(0, 0, 90.0f, 97.5f));
+        player = new Player(0, 0, 90.0f / 5, 97.5f / 5, spritesheet.getSprite(0, 0, 90.0f, 97.5f));
+        entities.add(player);
+        addKeyListener(new KeyboardCommands(player));
     }
 
     public static BufferedImage scaleImage(BufferedImage originalImage, int targetWidth, int targetHeight) {
