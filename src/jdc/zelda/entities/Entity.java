@@ -20,32 +20,32 @@ public class Entity {
         this.sprite = sprite;
     }
 
-    public double getX() {
-        return x;
+    public int getX() {
+        return (int)x;
     }
 
     public void setX(double x) {
         this.x = x;
     }
 
-    public double getY() {
-        return y;
+    public int getY() {
+        return (int)y;
     }
 
     public void setY(double y) {
         this.y = y;
     }
 
-    public float getWidth() {
-        return width;
+    public int getWidth() {
+        return (int)width;
     }
 
     public void setWidth(float width) {
         this.width = width;
     }
 
-    public float getHeight() {
-        return height;
+    public int getHeight() {
+        return (int)height;
     }
 
     public void setHeight(float height) {
@@ -57,6 +57,6 @@ public class Entity {
     }
 
     public void render(Graphics g) {
-        g.drawImage(sprite, (int)x, (int)y, (int)width, (int)height, null);
+        g.drawImage(sprite, getX(), getY(), getWidth(), getHeight(), null);
     }
 }

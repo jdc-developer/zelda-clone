@@ -24,7 +24,7 @@ public class ZeldaGame extends Canvas implements Runnable {
     private BufferedImage image;
 
     public List<Entity> entities;
-    public Spritesheet spritesheet;
+    public static Spritesheet spritesheet;
     public Player player;
 
     public ZeldaGame() {
@@ -34,7 +34,7 @@ public class ZeldaGame extends Canvas implements Runnable {
         entities = new ArrayList<>();
         spritesheet = new Spritesheet("/spritesheet.png");
 
-        player = new Player(0, 0, 90.0f / 5, 97.5f / 5, spritesheet.getSprite(0, 0, 90.0f, 97.5f));
+        player = new Player(0, 0, spritesheet.getSprite(0, 0, Player.WIDTH, Player.HEIGHT));
         entities.add(player);
         addKeyListener(new KeyboardCommands(player));
     }
