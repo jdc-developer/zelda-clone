@@ -4,6 +4,7 @@ import jdc.zelda.commands.KeyboardCommands;
 import jdc.zelda.entities.Entity;
 import jdc.zelda.entities.Player;
 import jdc.zelda.graphics.Spritesheet;
+import jdc.zelda.world.World;
 
 import javax.swing.*;
 import java.awt.*;
@@ -25,15 +26,20 @@ public class ZeldaGame extends Canvas implements Runnable {
 
     public List<Entity> entities;
     public static Spritesheet spritesheet;
+    public static Spritesheet tileset;
     public Player player;
+
+    public static World world;
 
     public ZeldaGame() {
         setPreferredSize(new Dimension(WIDTH * SCALE, HEIGHT * SCALE));
         initFrame();
+
         image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
         entities = new ArrayList<>();
         spritesheet = new Spritesheet("/spritesheet.png");
-
+        tileset = new Spritesheet("/tileset.png");
+        world = new World("/map.png");
         player = new Player(0, 0, spritesheet.getSprite(0, 0, Player.WIDTH, Player.HEIGHT));
         entities.add(player);
         addKeyListener(new KeyboardCommands(player));
@@ -95,6 +101,7 @@ public class ZeldaGame extends Canvas implements Runnable {
 
         //RENDER GAME
         Graphics2D g2 = (Graphics2D) g;
+        world.render(g);
         for(int i = 0; i < entities.size(); i++) {
             Entity e = entities.get(i);
             e.render(g2);
