@@ -1,9 +1,18 @@
 package jdc.zelda.entities;
 
+import jdc.zelda.world.Camera;
+
+import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 
 public class Entity {
+
+    public static BufferedImage LIFEPOTION_EN;
+    public static BufferedImage WEAPON_EN;
+    public static BufferedImage ENEMY_EN;
+    public static BufferedImage AMMO_EN;
 
     protected double x;
     protected double y;
@@ -18,6 +27,15 @@ public class Entity {
         this.width = width;
         this.height = height;
         this.sprite = sprite;
+
+        try {
+            LIFEPOTION_EN = ImageIO.read(getClass().getResourceAsStream("/healing_potion.png"));
+            WEAPON_EN = ImageIO.read(getClass().getResourceAsStream("/gun.png"));
+            ENEMY_EN = ImageIO.read(getClass().getResourceAsStream("/enemy.png"));
+            AMMO_EN = ImageIO.read(getClass().getResourceAsStream("/ammo.png"));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public int getX() {
@@ -57,6 +75,6 @@ public class Entity {
     }
 
     public void render(Graphics g) {
-        g.drawImage(sprite, getX(), getY(), getWidth(), getHeight(), null);
+        g.drawImage(sprite, getX() - Camera.x, getY() - Camera.y, getWidth(), getHeight(), null);
     }
 }

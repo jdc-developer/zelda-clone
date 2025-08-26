@@ -1,6 +1,7 @@
 package jdc.zelda.entities;
 
 import jdc.zelda.ZeldaGame;
+import jdc.zelda.world.Camera;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -69,13 +70,16 @@ public class Player extends Entity {
                 if (animationIndex > maxAnimationIndex) animationIndex = 0;
             }
         }
+
+        Camera.x = this.getX() - (ZeldaGame.WIDTH / 2);
+        Camera.y = this.getY() - (ZeldaGame.WIDTH / 2);
     }
 
     public void render(Graphics g) {
         if (dir == rightDir) {
-            g.drawImage(rightPlayer[animationIndex], getX(), getY(), getWidth(), getHeight(), null);
+            g.drawImage(rightPlayer[animationIndex], getX() - Camera.x, getY() - Camera.y, getWidth(), getHeight(), null);
         } else if (dir == leftDir) {
-            g.drawImage(leftPlayer[animationIndex], getX(), getY(), getWidth(), getHeight(),null);
+            g.drawImage(leftPlayer[animationIndex], getX() - Camera.x, getY() -  Camera.y, getWidth(), getHeight(),null);
         } else {
 
         }

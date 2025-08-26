@@ -18,16 +18,16 @@ public class ZeldaGame extends Canvas implements Runnable {
     public boolean isRunning;
     public Thread thread;
     private static JFrame frame;
-    private final int WIDTH = 240;
-    private final int HEIGHT = 160;
-    private final int SCALE = 3;
+    public static final int WIDTH = 240;
+    public static final int HEIGHT = 160;
+    public static final int SCALE = 3;
 
     private BufferedImage image;
 
-    public List<Entity> entities;
+    public static List<Entity> entities;
     public static Spritesheet spritesheet;
     public static Spritesheet tileset;
-    public Player player;
+    public static Player player;
 
     public static World world;
 
@@ -39,8 +39,8 @@ public class ZeldaGame extends Canvas implements Runnable {
         entities = new ArrayList<>();
         spritesheet = new Spritesheet("/spritesheet.png");
         tileset = new Spritesheet("/tileset.png");
-        world = new World("/map.png");
         player = new Player(0, 0, spritesheet.getSprite(0, 0, Player.WIDTH, Player.HEIGHT));
+        world = new World("/map.png");
         entities.add(player);
         addKeyListener(new KeyboardCommands(player));
     }
