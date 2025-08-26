@@ -2,6 +2,7 @@ package jdc.zelda.entities;
 
 import jdc.zelda.ZeldaGame;
 import jdc.zelda.world.Camera;
+import jdc.zelda.world.World;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -71,8 +72,8 @@ public class Player extends Entity {
             }
         }
 
-        Camera.x = this.getX() - (ZeldaGame.WIDTH / 2);
-        Camera.y = this.getY() - (ZeldaGame.WIDTH / 2);
+        Camera.x = Camera.clamp(this.getX() - (ZeldaGame.WIDTH / 2), 0, World.WIDTH*16 - ZeldaGame.WIDTH);
+        Camera.y = Camera.clamp(this.getY() - (ZeldaGame.HEIGHT / 2), 0, World.HEIGHT*16 - ZeldaGame.HEIGHT);
     }
 
     public void render(Graphics g) {

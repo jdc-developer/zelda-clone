@@ -58,6 +58,7 @@ public class World {
                             ZeldaGame.entities.add(new Ammo(xx*16, yy*16, 16, 16, Entity.AMMO_EN));
                             break;
                         default:
+                            tiles[xx + (yy * WIDTH)] = new FloorTile(xx * 16, yy * 16, Tile.TILE_FLOOR);
                             break;
                     }
                 }
@@ -68,8 +69,16 @@ public class World {
     }
 
     public void render(Graphics g) {
-        for (int xx = 0; xx < WIDTH; xx++) {
-            for (int yy = 0; yy < HEIGHT; yy++) {
+        int xstart = Camera.x >> 4;
+        int ystart = Camera.y >> 4;
+
+        int xfinal = xstart + ZeldaGame.WIDTH >> 4;
+        int yfinal = ystart + ZeldaGame.HEIGHT >> 3;
+
+        for (int xx = xstart; xx <= xfinal; xx++) {
+            for (int yy = ystart; yy <= yfinal; yy++) {
+                if (xx < 0 || yy < 0 || xx >= WIDTH || yy >= HEIGHT)
+                    continue;
                 Tile tile = tiles[xx + (yy * WIDTH)];
                 tile.render(g);
             }
