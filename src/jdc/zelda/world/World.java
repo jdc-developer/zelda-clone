@@ -1,6 +1,6 @@
 package jdc.zelda.world;
 
-import jdc.zelda.ZeldaGame;
+import jdc.zelda.Game;
 import jdc.zelda.entities.*;
 
 import javax.imageio.ImageIO;
@@ -10,8 +10,9 @@ import java.io.IOException;
 
 public class World {
 
-    private Tile[] tiles;
+    private static  Tile[] tiles;
     public static int WIDTH, HEIGHT;
+    public static final int TILE_SIZE = 16;
 
     public World(String path) {
         try {
@@ -33,32 +34,32 @@ public class World {
                             break;
                         case 0xFFFFFFFF:
                             //Parede
-                            tiles[xx + (yy * WIDTH)] = new FloorTile(xx * 16, yy * 16, Tile.TILE_WALL);
+                            tiles[xx + (yy * WIDTH)] = new WallTile(xx * 16, yy * 16, Tile.TILE_WALL);
                             break;
                         case 0xFF1922d8:
                             //Player
-                            ZeldaGame.player.setX(xx*16);
-                            ZeldaGame.player.setY(yy*16);
+                            Game.player.setX(xx*16);
+                            Game.player.setY(yy*16);
                             tiles[xx + (yy * WIDTH)] = new FloorTile(xx * 16, yy * 16, Tile.TILE_FLOOR);
                             break;
                         case 0XFFFF0000:
                             //Enemy
-                            ZeldaGame.entities.add(new Enemy(xx*16, yy*16, 16, 16, Entity.ENEMY_EN));
+                            Game.entities.add(new Enemy(xx*16, yy*16, 16, 16, Entity.ENEMY_EN));
                             break;
                         case 0XFFFFA200:
                             //Weapon
-                            ZeldaGame.entities.add(new Weapon(xx*16, yy*16, 16, 16, Entity.WEAPON_EN));
+                            Game.entities.add(new Weapon(xx*16, yy*16, 16, 16, Entity.WEAPON_EN));
                             break;
                         case 0XFFEB76C3:
                             //Potion
-                            ZeldaGame.entities.add(new Potion(xx*16, yy*16, 16, 16, Entity.LIFEPOTION_EN));
+                            Game.entities.add(new Potion(xx*16, yy*16, 16, 16, Entity.LIFEPOTION_EN));
                             break;
                         case 0XFFF8FB05:
                             //Ammo
-                            ZeldaGame.entities.add(new Ammo(xx*16, yy*16, 16, 16, Entity.AMMO_EN));
+                            Game.entities.add(new Ammo(xx*16, yy*16, 16, 16, Entity.AMMO_EN));
                             break;
                         default:
-                            tiles[xx + (yy * WIDTH)] = new FloorTile(xx * 16, yy * 16, Tile.TILE_FLOOR);
+                            //tiles[xx + (yy * WIDTH)] = new FloorTile(xx * 16, yy * 16, Tile.TILE_FLOOR);
                             break;
                     }
                 }
@@ -72,8 +73,8 @@ public class World {
         int xstart = Camera.x >> 4;
         int ystart = Camera.y >> 4;
 
-        int xfinal = xstart + ZeldaGame.WIDTH >> 4;
-        int yfinal = ystart + ZeldaGame.HEIGHT >> 3;
+        int xfinal = xstart + Game.WIDTH >> 3;
+        int yfinal = ystart + Game.HEIGHT >> 3;
 
         for (int xx = xstart; xx <= xfinal; xx++) {
             for (int yy = ystart; yy <= yfinal; yy++) {
@@ -83,5 +84,24 @@ public class World {
                 tile.render(g);
             }
         }
+    }
+
+    public static boolean isFree(int xnext, int ynext) {
+        int x1 = xnext / TILE_SIZE;
+        int y1 = ynext / TILE_SIZE;
+
+        int x2 = (xnext + TILE_SIZE - 1) / TILE_SIZE;
+        int y2 = ynext / TILE_SIZE;
+
+        int x3 = xnext / TILE_SIZE;
+        int y3 = (ynext + TILE_SIZE - 1) / TILE_SIZE;
+
+        int x4 = (xnext + TILE_SIZE - 1) / TILE_SIZE;
+        int y4 = (ynext + TILE_SIZE - 1) / TILE_SIZE;
+
+        return !((tiles[x1 + (y1 * World.WIDTH)] instanceof WallTile) ||
+                (tiles[x2 + (y2 * World.WIDTH)] instanceof WallTile) ||
+                (tiles[x3 + (y3 * World.WIDTH)] instanceof WallTile) ||
+                        (tiles[x4 + (y4 * World.WIDTH)] instanceof WallTile));
     }
 }

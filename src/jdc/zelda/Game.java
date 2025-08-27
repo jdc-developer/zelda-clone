@@ -13,7 +13,7 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ZeldaGame extends Canvas implements Runnable {
+public class Game extends Canvas implements Runnable {
 
     public boolean isRunning;
     public Thread thread;
@@ -31,7 +31,7 @@ public class ZeldaGame extends Canvas implements Runnable {
 
     public static World world;
 
-    public ZeldaGame() {
+    public Game() {
         setPreferredSize(new Dimension(WIDTH * SCALE, HEIGHT * SCALE));
         initFrame();
 
@@ -63,7 +63,7 @@ public class ZeldaGame extends Canvas implements Runnable {
     }
 
     public static void main(String[] args) {
-        ZeldaGame game = new ZeldaGame();
+        Game game = new Game();
         game.start();
     }
 
@@ -123,6 +123,7 @@ public class ZeldaGame extends Canvas implements Runnable {
 
         int frames = 0;
         double timer = System.currentTimeMillis();
+        requestFocus();
 
         while(isRunning) {
             long now = System.nanoTime();

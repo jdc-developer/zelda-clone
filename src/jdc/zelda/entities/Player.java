@@ -1,6 +1,6 @@
 package jdc.zelda.entities;
 
-import jdc.zelda.ZeldaGame;
+import jdc.zelda.Game;
 import jdc.zelda.world.Camera;
 import jdc.zelda.world.World;
 
@@ -30,33 +30,33 @@ public class Player extends Entity {
         leftPlayer = new BufferedImage[10];
 
         for (int i = 0; i < 10; i++) {
-            rightPlayer[i] = ZeldaGame.spritesheet.getSprite(0 + (i*WIDTH), 682.5f, WIDTH, HEIGHT);
+            rightPlayer[i] = Game.spritesheet.getSprite(0 + (i*WIDTH), 682.5f, WIDTH, HEIGHT);
         }
 
         for (int i = 0; i < 10; i++) {
-            leftPlayer[i] = ZeldaGame.spritesheet.getSprite(0 + (i*WIDTH), 487.5f, WIDTH, HEIGHT);
+            leftPlayer[i] = Game.spritesheet.getSprite(0 + (i*WIDTH), 487.5f, WIDTH, HEIGHT);
         }
 
     }
 
     public void tick() {
         moved = false;
-        if (right) {
+        if (right && World.isFree((int)(getX() + speed), getY())) {
             moved = true;
             dir = rightDir;
             x += speed;
         }
-        else if (left) {
+        else if (left && World.isFree((int)(getX() - speed), getY())) {
             moved = true;
             dir = leftDir;
             x -= speed;
         }
 
-        if (up) {
+        if (up && World.isFree(getX(), (int)(getY() - speed))) {
             moved = true;
             y -= speed;
         }
-        else if (down) {
+        else if (down && World.isFree(getX(), (int)(getY() + speed))) {
             moved = true;
             y += speed;
         }
@@ -72,8 +72,8 @@ public class Player extends Entity {
             }
         }
 
-        Camera.x = Camera.clamp(this.getX() - (ZeldaGame.WIDTH / 2), 0, World.WIDTH*16 - ZeldaGame.WIDTH);
-        Camera.y = Camera.clamp(this.getY() - (ZeldaGame.HEIGHT / 2), 0, World.HEIGHT*16 - ZeldaGame.HEIGHT);
+        Camera.x = Camera.clamp(this.getX() - (Game.WIDTH / 2), 0, World.WIDTH*16 - Game.WIDTH);
+        Camera.y = Camera.clamp(this.getY() - (Game.HEIGHT / 2), 0, World.HEIGHT*16 - Game.HEIGHT);
     }
 
     public void render(Graphics g) {
