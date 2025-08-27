@@ -1,6 +1,7 @@
 package jdc.zelda;
 
 import jdc.zelda.commands.KeyboardCommands;
+import jdc.zelda.entities.Enemy;
 import jdc.zelda.entities.Entity;
 import jdc.zelda.entities.Player;
 import jdc.zelda.graphics.Spritesheet;
@@ -12,6 +13,7 @@ import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class Game extends Canvas implements Runnable {
 
@@ -25,19 +27,26 @@ public class Game extends Canvas implements Runnable {
     private BufferedImage image;
 
     public static List<Entity> entities;
+    public static List<Enemy> enemies;
     public static Spritesheet spritesheet;
+    public static Spritesheet enemySpritesheet;
     public static Spritesheet tileset;
     public static Player player;
 
     public static World world;
 
+    public static Random rand;
+
     public Game() {
+        rand = new Random();
         setPreferredSize(new Dimension(WIDTH * SCALE, HEIGHT * SCALE));
         initFrame();
 
         image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
         entities = new ArrayList<>();
+        enemies = new ArrayList<>();
         spritesheet = new Spritesheet("/spritesheet.png");
+        enemySpritesheet = new Spritesheet("/enemies.png");
         tileset = new Spritesheet("/tileset.png");
         player = new Player(0, 0, spritesheet.getSprite(0, 0, Player.WIDTH, Player.HEIGHT));
         world = new World("/map.png");

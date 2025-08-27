@@ -11,7 +11,6 @@ public class Entity {
 
     public static BufferedImage LIFEPOTION_EN;
     public static BufferedImage WEAPON_EN;
-    public static BufferedImage ENEMY_EN;
     public static BufferedImage AMMO_EN;
 
     protected double x;
@@ -31,7 +30,6 @@ public class Entity {
         try {
             LIFEPOTION_EN = ImageIO.read(getClass().getResourceAsStream("/healing_potion.png"));
             WEAPON_EN = ImageIO.read(getClass().getResourceAsStream("/gun.png"));
-            ENEMY_EN = ImageIO.read(getClass().getResourceAsStream("/enemy.png"));
             AMMO_EN = ImageIO.read(getClass().getResourceAsStream("/ammo.png"));
         } catch (IOException e) {
             throw new RuntimeException(e);

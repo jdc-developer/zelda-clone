@@ -44,7 +44,9 @@ public class World {
                             break;
                         case 0XFFFF0000:
                             //Enemy
-                            Game.entities.add(new Enemy(xx*16, yy*16, 16, 16, Entity.ENEMY_EN));
+                            Enemy en = new Enemy(xx*16, yy*16, 40, 48, Game.enemySpritesheet.getSprite(0, 72, Enemy.WIDTH, Enemy.HEIGHT));
+                            Game.entities.add(en);
+                            Game.enemies.add(en);
                             break;
                         case 0XFFFFA200:
                             //Weapon
