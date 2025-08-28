@@ -45,10 +45,11 @@ public class Enemy extends Entity {
         } else {
             if (Game.rand.nextInt(100) < 20) {
                 Player.life--;
+                Player.isTakingDamage = true;
                 System.out.println(Game.player.life);
             }
 
-            if (Game.player.life == 0) System.exit(1);
+            //if (Game.player.life == 0) System.exit(1);
         }
 
 

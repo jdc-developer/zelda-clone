@@ -14,6 +14,11 @@ public class Player extends Entity {
     public static final float HEIGHT = 97.5f;
     public static final int SUBSCALE = 5;
 
+    private static final int DAMAGE_TIME = 1500;
+    private static final int DAMAGE_ANIMATION_INTERCURRENCY = 100;
+    private Long damageStartTime = 0L;
+    private Long lastDamageAnimationTime = 0L;
+
     public boolean right, up, left, down;
     public int rightDir = 0, leftDir = 1;
     public int dir = rightDir;
@@ -22,8 +27,11 @@ public class Player extends Entity {
 
     private int frames = 0, maxFrames = 5, animationIndex = 0, maxAnimationIndex = 9;
     private boolean moved = false;
+    public static boolean isTakingDamage = false;
     private BufferedImage[] rightPlayer;
     private BufferedImage[] leftPlayer;
+
+    public int ammo;
 
     public Player(int x, int y, BufferedImage sprite) {
         super(x, y, WIDTH / SUBSCALE, HEIGHT / SUBSCALE, sprite);
@@ -75,19 +83,37 @@ public class Player extends Entity {
         }
 
         checkCollisionPotion();
+        checkCollisionAmmo();
 
         Camera.x = Camera.clamp(this.getX() - (Game.WIDTH / 2), 0, World.WIDTH*16 - Game.WIDTH);
         Camera.y = Camera.clamp(this.getY() - (Game.HEIGHT / 2), 0, World.HEIGHT*16 - Game.HEIGHT);
+
+        if (life <= 0) Game.restart();
     }
 
     public void render(Graphics g) {
+        if (isTakingDamage) {
+            if (damageStartTime == 0) damageStartTime = System.currentTimeMillis();
+            if (damageStartTime + DAMAGE_TIME > System.currentTimeMillis()) {
+                if (lastDamageAnimationTime == 0) lastDamageAnimationTime = System.currentTimeMillis();
+                if (lastDamageAnimationTime + DAMAGE_ANIMATION_INTERCURRENCY > System.currentTimeMillis()) return;
+                else if (lastDamageAnimationTime + (DAMAGE_ANIMATION_INTERCURRENCY * 2) < System.currentTimeMillis()) lastDamageAnimationTime = System.currentTimeMillis();
+            } else {
+                lastDamageAnimationTime = 0L;
+                damageStartTime = 0L;
+                isTakingDamage = false;
+            }
+        }
+
         if (dir == rightDir) {
             g.drawImage(rightPlayer[animationIndex], getX() - Camera.x, getY() - Camera.y, getWidth(), getHeight(), null);
         } else if (dir == leftDir) {
             g.drawImage(leftPlayer[animationIndex], getX() - Camera.x, getY() -  Camera.y, getWidth(), getHeight(),null);
-        } else {
-
         }
+
+    }
+
+    public void checkDamageAnimation() {
 
     }
 
@@ -123,6 +149,14 @@ public class Player extends Entity {
         this.down = down;
     }
 
+    public int getAmmo() {
+        return ammo;
+    }
+
+    public void setAmmo(int ammo) {
+        this.ammo = ammo;
+    }
+
     public void checkCollisionPotion() {
         for (int i = 0; i < Game.entities.size(); i ++) {
             Entity e = Game.entities.get(i);
@@ -130,6 +164,18 @@ public class Player extends Entity {
                 if (Entity.isColliding(this, e)) {
                     life += 10;
                     if (life > 100) life = 100;
+                    Game.entities.remove(e);
+                }
+            }
+        }
+    }
+
+    public void checkCollisionAmmo() {
+        for (int i = 0; i < Game.entities.size(); i ++) {
+            Entity e = Game.entities.get(i);
+            if (e instanceof Ammo) {
+                if (Entity.isColliding(this, e)) {
+                    ammo += 10;
                     Game.entities.remove(e);
                 }
             }

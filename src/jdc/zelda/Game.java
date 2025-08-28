@@ -57,6 +57,14 @@ public class Game extends Canvas implements Runnable {
         addKeyListener(new KeyboardCommands(player));
     }
 
+    public static void restart() {
+        entities = new ArrayList<>();
+        enemies = new ArrayList<>();
+        player = new Player(0, 0, spritesheet.getSprite(0, 0, Player.WIDTH, Player.HEIGHT));
+        world = new World("/map.png");
+        entities.add(player);
+    }
+
     public static BufferedImage scaleImage(BufferedImage originalImage, int targetWidth, int targetHeight) {
         Image resultingImage = originalImage.getScaledInstance(targetWidth, targetHeight, Image.SCALE_SMOOTH);
         BufferedImage outputImage = new BufferedImage(targetWidth, targetHeight, BufferedImage.TYPE_INT_ARGB);
@@ -124,6 +132,9 @@ public class Game extends Canvas implements Runnable {
         g.dispose();
         g = bs.getDrawGraphics();
         g.drawImage(image, 0, 0, WIDTH * SCALE, HEIGHT * SCALE, null);
+        g.setFont(new Font("arial", Font.BOLD, 17));
+        g.setColor(Color.white);
+        g.drawString("Munição: " + player.getAmmo(), 30, 20);
         bs.show();
     }
 
