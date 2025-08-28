@@ -54,7 +54,9 @@ public class World {
                             break;
                         case 0XFFEB76C3:
                             //Potion
-                            Game.entities.add(new Potion(xx*16, yy*16, 16, 16, Entity.LIFEPOTION_EN));
+                            Potion potion = new Potion(xx*16, yy*16, 30, 30, Entity.LIFEPOTION_EN);
+                            potion.setMask(10, 10, 10f, 15f);
+                            Game.entities.add(potion);
                             break;
                         case 0XFFF8FB05:
                             //Ammo

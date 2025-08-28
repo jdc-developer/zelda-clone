@@ -9,6 +9,7 @@ import java.awt.image.BufferedImage;
 
 public class Player extends Entity {
 
+    public static final float MAX_LIFE = 100f;
     public static final float WIDTH = 90.0f;
     public static final float HEIGHT = 97.5f;
     public static final int SUBSCALE = 5;
@@ -17,6 +18,7 @@ public class Player extends Entity {
     public int rightDir = 0, leftDir = 1;
     public int dir = rightDir;
     public float speed = 1.5f;
+    public static float life = MAX_LIFE;
 
     private int frames = 0, maxFrames = 5, animationIndex = 0, maxAnimationIndex = 9;
     private boolean moved = false;
@@ -72,6 +74,8 @@ public class Player extends Entity {
             }
         }
 
+        checkCollisionPotion();
+
         Camera.x = Camera.clamp(this.getX() - (Game.WIDTH / 2), 0, World.WIDTH*16 - Game.WIDTH);
         Camera.y = Camera.clamp(this.getY() - (Game.HEIGHT / 2), 0, World.HEIGHT*16 - Game.HEIGHT);
     }
@@ -117,5 +121,18 @@ public class Player extends Entity {
 
     public void setDown(boolean down) {
         this.down = down;
+    }
+
+    public void checkCollisionPotion() {
+        for (int i = 0; i < Game.entities.size(); i ++) {
+            Entity e = Game.entities.get(i);
+            if (e instanceof Potion) {
+                if (Entity.isColliding(this, e)) {
+                    life += 10;
+                    if (life > 100) life = 100;
+                    Game.entities.remove(e);
+                }
+            }
+        }
     }
 }

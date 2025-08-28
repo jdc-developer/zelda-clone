@@ -5,6 +5,7 @@ import jdc.zelda.entities.Enemy;
 import jdc.zelda.entities.Entity;
 import jdc.zelda.entities.Player;
 import jdc.zelda.graphics.Spritesheet;
+import jdc.zelda.graphics.UI;
 import jdc.zelda.world.World;
 
 import javax.swing.*;
@@ -36,11 +37,13 @@ public class Game extends Canvas implements Runnable {
     public static World world;
 
     public static Random rand;
+    public UI ui;
 
     public Game() {
         rand = new Random();
         setPreferredSize(new Dimension(WIDTH * SCALE, HEIGHT * SCALE));
         initFrame();
+        ui = new UI();
 
         image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
         entities = new ArrayList<>();
@@ -115,6 +118,7 @@ public class Game extends Canvas implements Runnable {
             Entity e = entities.get(i);
             e.render(g2);
         }
+        ui.render(g);
 
         /***/
         g.dispose();

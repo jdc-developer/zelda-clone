@@ -20,12 +20,19 @@ public class Entity {
 
     private BufferedImage sprite;
 
+    protected float maskX, maskY, maskW, maskH;
+
     public Entity(double x, double y, float width, float height, BufferedImage sprite) {
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
         this.sprite = sprite;
+
+        this.maskX = 0;
+        this.maskY = 0;
+        this.maskW = width;
+        this.maskH = height;
 
         try {
             LIFEPOTION_EN = ImageIO.read(getClass().getResourceAsStream("/healing_potion.png"));
@@ -34,6 +41,13 @@ public class Entity {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public void setMask(float maskX, float maskY, float maskW, float maskH) {
+        this.maskX = maskX;
+        this.maskY = maskY;
+        this.maskW = maskW;
+        this.maskH = maskH;
     }
 
     public int getX() {
@@ -68,11 +82,52 @@ public class Entity {
         this.height = height;
     }
 
+    public int getMaskX() {
+        return (int) maskX;
+    }
+
+    public void setMaskX(float maskX) {
+        this.maskX = maskX;
+    }
+
+    public int getMaskY() {
+        return (int) maskY;
+    }
+
+    public void setMaskY(float maskY) {
+        this.maskY = maskY;
+    }
+
+    public int getMaskW() {
+        return (int) maskW;
+    }
+
+    public void setMaskW(float maskW) {
+        this.maskW = maskW;
+    }
+
+    public int getMaskH() {
+        return (int) maskH;
+    }
+
+    public void setMaskH(float maskH) {
+        this.maskH = maskH;
+    }
+
     public void tick() {
 
     }
 
+    public static boolean isColliding(Entity e1, Entity e2) {
+        Rectangle rec1 = new Rectangle(e1.getX() + e1.getMaskX(), e1.getY() + e1.getMaskY(), e1.getMaskW(), e1.getMaskH());
+        Rectangle rec2 = new Rectangle(e2.getX() + e2.getMaskX(), e2.getY() + e2.getMaskY(), e2.getMaskW(), e2.getMaskH());
+
+        return rec1.intersects(rec2);
+    }
+
     public void render(Graphics g) {
         g.drawImage(sprite, getX() - Camera.x, getY() - Camera.y, getWidth(), getHeight(), null);
+        g.setColor(Color.red);
+        g.fillRect(getX() + getMaskX() - Camera.x, getY() + getMaskY() - Camera.y, getMaskW(), getMaskH());
     }
 }
