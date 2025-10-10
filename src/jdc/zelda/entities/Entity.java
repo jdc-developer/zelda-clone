@@ -11,6 +11,7 @@ public class Entity {
 
     public static BufferedImage LIFEPOTION_EN;
     public static BufferedImage WEAPON_EN;
+    public static BufferedImage WEAPON_LEFT;
     public static BufferedImage AMMO_EN;
 
     protected double x;
@@ -37,6 +38,7 @@ public class Entity {
         try {
             LIFEPOTION_EN = ImageIO.read(getClass().getResourceAsStream("/healing_potion.png"));
             WEAPON_EN = ImageIO.read(getClass().getResourceAsStream("/gun.png"));
+            WEAPON_LEFT = ImageIO.read(getClass().getResourceAsStream("/gun-left.png"));
             AMMO_EN = ImageIO.read(getClass().getResourceAsStream("/ammo.png"));
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -127,7 +129,7 @@ public class Entity {
 
     public void render(Graphics g) {
         g.drawImage(sprite, getX() - Camera.x, getY() - Camera.y, getWidth(), getHeight(), null);
-        g.setColor(Color.red);
-        g.fillRect(getX() + getMaskX() - Camera.x, getY() + getMaskY() - Camera.y, getMaskW(), getMaskH());
+        //g.setColor(Color.red);
+        //g.fillRect(getX() + getMaskX() - Camera.x, getY() + getMaskY() - Camera.y, getMaskW(), getMaskH());
     }
 }

@@ -1,6 +1,8 @@
 package jdc.zelda;
 
 import jdc.zelda.commands.KeyboardCommands;
+import jdc.zelda.commands.MouseCommands;
+import jdc.zelda.entities.Bullet;
 import jdc.zelda.entities.Enemy;
 import jdc.zelda.entities.Entity;
 import jdc.zelda.entities.Player;
@@ -29,6 +31,7 @@ public class Game extends Canvas implements Runnable {
 
     public static List<Entity> entities;
     public static List<Enemy> enemies;
+    public static List<Bullet> bullets;
     public static Spritesheet spritesheet;
     public static Spritesheet enemySpritesheet;
     public static Spritesheet tileset;
@@ -48,6 +51,7 @@ public class Game extends Canvas implements Runnable {
         image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
         entities = new ArrayList<>();
         enemies = new ArrayList<>();
+        bullets = new ArrayList<>();
         spritesheet = new Spritesheet("/spritesheet.png");
         enemySpritesheet = new Spritesheet("/enemies.png");
         tileset = new Spritesheet("/tileset.png");
@@ -55,14 +59,17 @@ public class Game extends Canvas implements Runnable {
         world = new World("/map.png");
         entities.add(player);
         addKeyListener(new KeyboardCommands(player));
+        addMouseListener(new MouseCommands(player));
     }
 
     public static void restart() {
         entities = new ArrayList<>();
         enemies = new ArrayList<>();
-        player = new Player(0, 0, spritesheet.getSprite(0, 0, Player.WIDTH, Player.HEIGHT));
-        world = new World("/map.png");
+        player.setX(0);
+        player.setY(0);
+        player.life = Player.MAX_LIFE;
         entities.add(player);
+        world = new World("/map.png");
     }
 
     public static BufferedImage scaleImage(BufferedImage originalImage, int targetWidth, int targetHeight) {
@@ -103,6 +110,11 @@ public class Game extends Canvas implements Runnable {
     }
 
     public void tick() {
+        for(int i = 0; i < bullets.size(); i++) {
+            Bullet e = bullets.get(i);
+            e.tick();
+        }
+
         for(int i = 0; i < entities.size(); i++) {
             Entity e = entities.get(i);
             e.tick();
@@ -125,6 +137,11 @@ public class Game extends Canvas implements Runnable {
         for(int i = 0; i < entities.size(); i++) {
             Entity e = entities.get(i);
             e.render(g2);
+        }
+
+        for(int i = 0; i < bullets.size(); i++) {
+            Bullet e = bullets.get(i);
+            e.render(g);
         }
         ui.render(g);
 

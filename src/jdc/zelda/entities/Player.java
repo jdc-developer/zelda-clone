@@ -23,13 +23,19 @@ public class Player extends Entity {
     public int rightDir = 0, leftDir = 1;
     public int dir = rightDir;
     public float speed = 1.5f;
-    public static float life = MAX_LIFE;
+    public float life = MAX_LIFE;
 
     private int frames = 0, maxFrames = 5, animationIndex = 0, maxAnimationIndex = 9;
     private boolean moved = false;
     public static boolean isTakingDamage = false;
     private BufferedImage[] rightPlayer;
     private BufferedImage[] leftPlayer;
+
+    public boolean hasGun;
+    public boolean isShooting;
+    public boolean isMouseShooting;
+
+    public int mx, my;
 
     public int ammo;
 
@@ -84,9 +90,52 @@ public class Player extends Entity {
 
         checkCollisionPotion();
         checkCollisionAmmo();
+        checkCollisionGun();
 
         Camera.x = Camera.clamp(this.getX() - (Game.WIDTH / 2), 0, World.WIDTH*16 - Game.WIDTH);
         Camera.y = Camera.clamp(this.getY() - (Game.HEIGHT / 2), 0, World.HEIGHT*16 - Game.HEIGHT);
+
+        if (hasGun && isShooting && ammo > 0) {
+            ammo--;
+            isShooting = false;
+            int dx;
+            int px;
+            int py = 4;
+
+            if (dir == rightDir) {
+                px = 24;
+                dx = 1;
+            }
+            else {
+                px = -14;
+                dx = -1;
+            }
+
+            Bullet bullet = new Bullet(getX() + px, getY() + py,3,3, dx, 0);
+            Game.bullets.add(bullet);
+        }
+
+        if (hasGun && isMouseShooting && ammo > 0) {
+            ammo--;
+            isMouseShooting = false;
+
+            int px = 0, py = 4;
+            double angle = 0;
+            if (dir == rightDir) {
+                px = 24;
+                angle = Math.atan2(my - (this.getY()+py - Camera.y), mx - (getX()+px - Camera.x));
+            }
+            else {
+                px = -14;
+                angle = Math.atan2(my - (this.getY()+py - Camera.y), mx - (getX()+px - Camera.x));
+            }
+
+            double dx = Math.cos(angle);
+            double dy = Math.sin(angle);
+
+            Bullet bullet = new Bullet(getX() + px, getY() + py,3,3, dx, dy);
+            Game.bullets.add(bullet);
+        }
 
         if (life <= 0) Game.restart();
     }
@@ -107,8 +156,14 @@ public class Player extends Entity {
 
         if (dir == rightDir) {
             g.drawImage(rightPlayer[animationIndex], getX() - Camera.x, getY() - Camera.y, getWidth(), getHeight(), null);
+            if (hasGun) {
+                g.drawImage(Entity.WEAPON_EN, this.getX() - Camera.x + 15, this.getY() - Camera.y + 2, 16, 16, null);
+            }
         } else if (dir == leftDir) {
             g.drawImage(leftPlayer[animationIndex], getX() - Camera.x, getY() -  Camera.y, getWidth(), getHeight(),null);
+            if (hasGun) {
+                g.drawImage(Entity.WEAPON_LEFT, this.getX() - Camera.x - 13, this.getY() - Camera.y + 2, 16, 16, null);
+            }
         }
 
     }
@@ -176,6 +231,18 @@ public class Player extends Entity {
             if (e instanceof Ammo) {
                 if (Entity.isColliding(this, e)) {
                     ammo += 10;
+                    Game.entities.remove(e);
+                }
+            }
+        }
+    }
+
+    public void checkCollisionGun() {
+        for (int i = 0; i < Game.entities.size(); i ++) {
+            Entity e = Game.entities.get(i);
+            if (e instanceof Weapon) {
+                if (Entity.isColliding(this, e)) {
+                    hasGun = true;
                     Game.entities.remove(e);
                 }
             }

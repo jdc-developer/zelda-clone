@@ -35,6 +35,10 @@ public class KeyboardCommands implements KeyListener {
                 e.getKeyCode() == KeyEvent.VK_S) {
             player.setDown(true);
         }
+
+        if (e.getKeyCode() == KeyEvent.VK_SPACE && player.ammo > 0 && player.hasGun) {
+            player.isShooting = true;
+        }
     }
 
     @Override
