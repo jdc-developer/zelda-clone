@@ -2,6 +2,7 @@ package jdc.zelda.commands;
 
 import jdc.zelda.Game;
 import jdc.zelda.entities.Player;
+import jdc.zelda.ui.GameMenu;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -9,9 +10,11 @@ import java.awt.event.KeyListener;
 public class KeyboardCommands implements KeyListener {
 
     private Player player;
+    private GameMenu menu;
 
-    public KeyboardCommands(Player player) {
+    public KeyboardCommands(Player player, GameMenu menu) {
         this.player = player;
+        this.menu = menu;
     }
 
     @Override
@@ -43,6 +46,11 @@ public class KeyboardCommands implements KeyListener {
 
         if (e.getKeyCode() == KeyEvent.VK_ENTER) {
             Game.restartGame = true;
+        }
+
+        if (Game.gameState.equals("MENU")) {
+            if (e.getKeyCode() == KeyEvent.VK_UP) menu.up = true;
+            if (e.getKeyCode() == KeyEvent.VK_DOWN) menu.down = true;
         }
     }
 

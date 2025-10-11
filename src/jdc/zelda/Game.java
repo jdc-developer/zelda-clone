@@ -8,6 +8,7 @@ import jdc.zelda.entities.Entity;
 import jdc.zelda.entities.Player;
 import jdc.zelda.graphics.Spritesheet;
 import jdc.zelda.graphics.UI;
+import jdc.zelda.ui.GameMenu;
 import jdc.zelda.world.World;
 
 import javax.swing.*;
@@ -44,11 +45,13 @@ public class Game extends Canvas implements Runnable {
 
     private int CUR_LEVEL = 1, MAX_LEVEL = 2;
 
-    public static String gameState = "NORMAL";
+    public static String gameState = "MENU";
     private boolean showMessageGameOver = true;
     private int framesGameOver = 0;
 
     public static boolean restartGame = false;
+
+    private GameMenu menu;
 
     public Game() {
         rand = new Random();
@@ -66,8 +69,11 @@ public class Game extends Canvas implements Runnable {
         player = new Player(0, 0, spritesheet.getSprite(0, 0, Player.WIDTH, Player.HEIGHT));
         world = new World("/level-1.png");
         entities.add(player);
-        addKeyListener(new KeyboardCommands(player));
+        menu = new GameMenu();
+        addKeyListener(new KeyboardCommands(player, menu));
         addMouseListener(new MouseCommands(player));
+
+
     }
 
     public static void restart(String level) {
@@ -153,6 +159,8 @@ public class Game extends Canvas implements Runnable {
                 String newWorld = "level-"+CUR_LEVEL+".png";
                 Game.restart(newWorld);
             }
+        } else if (gameState.equals("MENU")) {
+            menu.tick();
         }
 
 
@@ -202,6 +210,8 @@ public class Game extends Canvas implements Runnable {
                 g22.setFont(new Font("arial", Font.BOLD, 18));
                 g22.drawString("Pressione enter para reiniciar", (WIDTH * SCALE) / 2 - 120, (HEIGHT * SCALE) / 2 + 20);
             }
+        } else if (gameState.equals("MENU")) {
+            menu.render(g);
         }
 
         bs.show();
