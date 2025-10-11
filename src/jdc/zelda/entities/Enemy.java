@@ -1,6 +1,7 @@
 package jdc.zelda.entities;
 
 import jdc.zelda.Game;
+import jdc.zelda.sound.Sound;
 import jdc.zelda.world.Camera;
 import jdc.zelda.world.World;
 
@@ -52,6 +53,7 @@ public class Enemy extends Entity {
             }
         } else {
             if (Game.rand.nextInt(100) < 20) {
+                Sound.hurtSound.play();
                 Game.player.life--;
                 Player.isTakingDamage = true;
                 System.out.println(Game.player.life);

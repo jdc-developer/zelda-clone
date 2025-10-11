@@ -11,7 +11,7 @@ public class GameMenu {
     public int currentOption = 0;
     public int maxOptions = options.length - 1;
 
-    public boolean up, down;
+    public boolean up, down, enter, pause;
 
     public void tick() {
         if (up) {
@@ -25,17 +25,30 @@ public class GameMenu {
             currentOption++;
             if (currentOption > maxOptions) currentOption = 0;
         }
+
+        if (enter) {
+            enter = false;
+            if (options[currentOption].equals("Novo Jogo") || options[currentOption].equals("Continuar")) {
+                pause = false;
+                Game.gameState = "NORMAL";
+            }
+            else if (options[currentOption].equals("Sair")) System.exit(0);
+        }
     }
 
-    public void render(Graphics g) {
-        g.setColor(Color.black);
+    public void render(Graphics2D g) {
+        g.setColor(new Color(0, 0, 0, 100));
         g.fillRect(0,0, Game.WIDTH * Game.SCALE, Game.HEIGHT * Game.SCALE);
         g.setColor(Color.white);
         g.setFont(new Font("arial", Font.BOLD, 38));
         g.drawString("Zelda Clone", (Game.WIDTH * Game.SCALE) / 2 - 100, (Game.HEIGHT * Game.SCALE) / 2 - 100);
 
         g.setFont(new Font("arial", Font.BOLD, 18));
-        g.drawString("Novo Jogo", (Game.WIDTH * Game.SCALE) / 2 - 40, (Game.HEIGHT * Game.SCALE) / 2 - 60);
+
+        String gameStr = "Novo Jogo";
+        if (pause) gameStr = "Resumir";
+
+        g.drawString(gameStr, (Game.WIDTH * Game.SCALE) / 2 - 40, (Game.HEIGHT * Game.SCALE) / 2 - 60);
         g.drawString("Carregar Jogo", (Game.WIDTH * Game.SCALE) / 2 - 40, (Game.HEIGHT * Game.SCALE) / 2 - 40);
         g.drawString("Sair", (Game.WIDTH * Game.SCALE) / 2 - 40, (Game.HEIGHT * Game.SCALE) / 2 - 20);
 

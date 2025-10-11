@@ -8,6 +8,7 @@ import jdc.zelda.entities.Entity;
 import jdc.zelda.entities.Player;
 import jdc.zelda.graphics.Spritesheet;
 import jdc.zelda.graphics.UI;
+import jdc.zelda.sound.Sound;
 import jdc.zelda.ui.GameMenu;
 import jdc.zelda.world.World;
 
@@ -54,6 +55,7 @@ public class Game extends Canvas implements Runnable {
     private GameMenu menu;
 
     public Game() {
+        //Sound.musicBackground.loop();
         rand = new Random();
         setPreferredSize(new Dimension(WIDTH * SCALE, HEIGHT * SCALE));
         initFrame();
@@ -198,8 +200,8 @@ public class Game extends Canvas implements Runnable {
         g.setColor(Color.white);
         g.drawString("Munição: " + player.getAmmo(), 30, 20);
 
+        Graphics2D g22 = (Graphics2D) g;
         if (gameState.equals("GAME_OVER")) {
-            Graphics2D g22 = (Graphics2D) g;
             g22.setColor(new Color(0, 0, 0, 100));
             g22.fillRect(0, 0, WIDTH * SCALE, HEIGHT * SCALE);
             g22.setFont(new Font("arial", Font.BOLD, 38));
@@ -211,7 +213,7 @@ public class Game extends Canvas implements Runnable {
                 g22.drawString("Pressione enter para reiniciar", (WIDTH * SCALE) / 2 - 120, (HEIGHT * SCALE) / 2 + 20);
             }
         } else if (gameState.equals("MENU")) {
-            menu.render(g);
+            menu.render(g22);
         }
 
         bs.show();

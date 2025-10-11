@@ -51,6 +51,12 @@ public class KeyboardCommands implements KeyListener {
         if (Game.gameState.equals("MENU")) {
             if (e.getKeyCode() == KeyEvent.VK_UP) menu.up = true;
             if (e.getKeyCode() == KeyEvent.VK_DOWN) menu.down = true;
+            if (e.getKeyCode() == KeyEvent.VK_ENTER) menu.enter = true;
+        }
+
+        if (e.getKeyCode() == KeyEvent.VK_ESCAPE && !Game.gameState.equals("MENU")) {
+            Game.gameState = "MENU";
+            menu.pause = true;
         }
     }
 

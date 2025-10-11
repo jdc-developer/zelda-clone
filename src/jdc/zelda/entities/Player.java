@@ -92,9 +92,6 @@ public class Player extends Entity {
         checkCollisionAmmo();
         checkCollisionGun();
 
-        Camera.x = Camera.clamp(this.getX() - (Game.WIDTH / 2), 0, World.WIDTH*16 - Game.WIDTH);
-        Camera.y = Camera.clamp(this.getY() - (Game.HEIGHT / 2), 0, World.HEIGHT*16 - Game.HEIGHT);
-
         if (hasGun && isShooting && ammo > 0) {
             ammo--;
             isShooting = false;
@@ -141,6 +138,13 @@ public class Player extends Entity {
             life = 0;
             Game.gameState = "GAME_OVER";
         }
+
+        updateCamera();
+    }
+
+    private void updateCamera() {
+        Camera.x = Camera.clamp(this.getX() - (Game.WIDTH / 2), 0, World.WIDTH*16 - Game.WIDTH);
+        Camera.y = Camera.clamp(this.getY() - (Game.HEIGHT / 2), 0, World.HEIGHT*16 - Game.HEIGHT);
     }
 
     public void render(Graphics g) {
