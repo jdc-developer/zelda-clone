@@ -42,6 +42,14 @@ public class Game extends Canvas implements Runnable {
     public static Random rand;
     public UI ui;
 
+    private int CUR_LEVEL = 1, MAX_LEVEL = 2;
+
+    public static String gameState = "NORMAL";
+    private boolean showMessageGameOver = true;
+    private int framesGameOver = 0;
+
+    public static boolean restartGame = false;
+
     public Game() {
         rand = new Random();
         setPreferredSize(new Dimension(WIDTH * SCALE, HEIGHT * SCALE));
@@ -56,20 +64,20 @@ public class Game extends Canvas implements Runnable {
         enemySpritesheet = new Spritesheet("/enemies.png");
         tileset = new Spritesheet("/tileset.png");
         player = new Player(0, 0, spritesheet.getSprite(0, 0, Player.WIDTH, Player.HEIGHT));
-        world = new World("/map.png");
+        world = new World("/level-1.png");
         entities.add(player);
         addKeyListener(new KeyboardCommands(player));
         addMouseListener(new MouseCommands(player));
     }
 
-    public static void restart() {
+    public static void restart(String level) {
         entities = new ArrayList<>();
         enemies = new ArrayList<>();
         player.setX(0);
         player.setY(0);
         player.life = Player.MAX_LIFE;
         entities.add(player);
-        world = new World("/map.png");
+        world = new World("/" + level);
     }
 
     public static BufferedImage scaleImage(BufferedImage originalImage, int targetWidth, int targetHeight) {
@@ -110,15 +118,44 @@ public class Game extends Canvas implements Runnable {
     }
 
     public void tick() {
-        for(int i = 0; i < bullets.size(); i++) {
-            Bullet e = bullets.get(i);
-            e.tick();
+        if (gameState.equals("NORMAL")) {
+            Game.restartGame = false;
+            for(int i = 0; i < bullets.size(); i++) {
+                Bullet e = bullets.get(i);
+                e.tick();
+            }
+
+            for(int i = 0; i < entities.size(); i++) {
+                Entity e = entities.get(i);
+                e.tick();
+            }
+
+            if (enemies.isEmpty()) {
+                CUR_LEVEL++;
+                if (CUR_LEVEL > MAX_LEVEL)  CUR_LEVEL = 1;
+                String newWorld = "level-"+CUR_LEVEL+".png";
+                Game.restart(newWorld);
+            }
+        } else if (gameState.equals("GAME_OVER")) {
+            framesGameOver++;
+            if(framesGameOver == 30) {
+                framesGameOver = 0;
+                if (showMessageGameOver)
+                    showMessageGameOver = false;
+                else
+                    showMessageGameOver = true;
+            }
+
+            if (restartGame) {
+                restartGame = false;
+                gameState = "NORMAL";
+                CUR_LEVEL = 1;
+                String newWorld = "level-"+CUR_LEVEL+".png";
+                Game.restart(newWorld);
+            }
         }
 
-        for(int i = 0; i < entities.size(); i++) {
-            Entity e = entities.get(i);
-            e.tick();
-        }
+
     }
 
     public void render() {
@@ -141,17 +178,32 @@ public class Game extends Canvas implements Runnable {
 
         for(int i = 0; i < bullets.size(); i++) {
             Bullet e = bullets.get(i);
-            e.render(g);
+            e.render(g2);
         }
-        ui.render(g);
+        ui.render(g2);
 
         /***/
-        g.dispose();
+        g2.dispose();
         g = bs.getDrawGraphics();
         g.drawImage(image, 0, 0, WIDTH * SCALE, HEIGHT * SCALE, null);
         g.setFont(new Font("arial", Font.BOLD, 17));
         g.setColor(Color.white);
         g.drawString("Munição: " + player.getAmmo(), 30, 20);
+
+        if (gameState.equals("GAME_OVER")) {
+            Graphics2D g22 = (Graphics2D) g;
+            g22.setColor(new Color(0, 0, 0, 100));
+            g22.fillRect(0, 0, WIDTH * SCALE, HEIGHT * SCALE);
+            g22.setFont(new Font("arial", Font.BOLD, 38));
+            g22.setColor(Color.white);
+            g22.drawString("Game Over", (WIDTH * SCALE) / 2 - 100, (HEIGHT * SCALE) / 2 - 20);
+
+            if (showMessageGameOver) {
+                g22.setFont(new Font("arial", Font.BOLD, 18));
+                g22.drawString("Pressione enter para reiniciar", (WIDTH * SCALE) / 2 - 120, (HEIGHT * SCALE) / 2 + 20);
+            }
+        }
+
         bs.show();
     }
 

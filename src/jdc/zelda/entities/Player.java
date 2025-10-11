@@ -137,7 +137,10 @@ public class Player extends Entity {
             Game.bullets.add(bullet);
         }
 
-        if (life <= 0) Game.restart();
+        if (life <= 0) {
+            life = 0;
+            Game.gameState = "GAME_OVER";
+        }
     }
 
     public void render(Graphics g) {

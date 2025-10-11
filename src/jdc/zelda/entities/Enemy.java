@@ -18,6 +18,14 @@ public class Enemy extends Entity {
     private int frames = 0, maxFrames = 10, animationIndex = 0, maxAnimationIndex = 9;
     private BufferedImage[] sprites;
 
+    private int life = 10;
+
+    public static boolean isTakingDamage = false;
+    private static final int DAMAGE_TIME = 1500;
+    private static final int DAMAGE_ANIMATION_INTERCURRENCY = 100;
+    private Long damageStartTime = 0L;
+    private Long lastDamageAnimationTime = 0L;
+
     public Enemy(double x, double y, float width, float height, BufferedImage sprite) {
         super(x, y, width, height, sprite);
 
@@ -55,6 +63,13 @@ public class Enemy extends Entity {
 
         frames++;
 
+        isCollidingWithBullet();
+        
+        if (life <= 0) {
+            Game.enemies.remove(this);
+            Game.entities.remove(this);
+        }
+
         if (frames == maxFrames) {
             frames = 0;
             animationIndex++;
@@ -64,8 +79,31 @@ public class Enemy extends Entity {
 
     }
 
+    private void isCollidingWithBullet() {
+        for (int i = 0; i < Game.bullets.size(); i++) {
+            Entity e = Game.bullets.get(i);
+            if (Entity.isColliding(this, e)) {
+                life -= 5;
+                isTakingDamage = true;
+                Game.bullets.remove(e);
+                return;
+            }
+        }
+    }
+
     public void render(Graphics g) {
-        //super.render(g);
+        if (isTakingDamage) {
+            if (damageStartTime == 0) damageStartTime = System.currentTimeMillis();
+            if (damageStartTime + DAMAGE_TIME > System.currentTimeMillis()) {
+                if (lastDamageAnimationTime == 0) lastDamageAnimationTime = System.currentTimeMillis();
+                if (lastDamageAnimationTime + DAMAGE_ANIMATION_INTERCURRENCY > System.currentTimeMillis()) return;
+                else if (lastDamageAnimationTime + (DAMAGE_ANIMATION_INTERCURRENCY * 2) < System.currentTimeMillis()) lastDamageAnimationTime = System.currentTimeMillis();
+            } else {
+                lastDamageAnimationTime = 0L;
+                damageStartTime = 0L;
+                isTakingDamage = false;
+            }
+        }
         g.drawImage(sprites[animationIndex], getX() - Camera.x, getY() - Camera.y, getWidth(), getHeight(), null);
         //g.setColor(Color.BLUE);
         //g.fillRect(getX() + maskx - Camera.x, getY() + masky - Camera.y, maskw, maskh);

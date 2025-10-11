@@ -1,5 +1,6 @@
 package jdc.zelda.commands;
 
+import jdc.zelda.Game;
 import jdc.zelda.entities.Player;
 
 import java.awt.event.KeyEvent;
@@ -38,6 +39,10 @@ public class KeyboardCommands implements KeyListener {
 
         if (e.getKeyCode() == KeyEvent.VK_SPACE && player.ammo > 0 && player.hasGun) {
             player.isShooting = true;
+        }
+
+        if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+            Game.restartGame = true;
         }
     }
 
