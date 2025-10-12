@@ -34,6 +34,12 @@ public class Player extends Entity {
     public boolean hasGun;
     public boolean isShooting;
     public boolean isMouseShooting;
+    public boolean jump = false;
+    public int z;
+    public int jumpFrames = 20, jumpCur = 0;
+    public boolean isJumping = false;
+    public float jumpSpeed = 1;
+    public boolean jumpUp = false, jumpDown = false;
 
     public int mx, my;
 
@@ -85,6 +91,31 @@ public class Player extends Entity {
                 animationIndex++;
 
                 if (animationIndex > maxAnimationIndex) animationIndex = 0;
+            }
+        }
+
+        if (jump) {
+            if (!isJumping) {
+                jump = false;
+                isJumping = true;
+                jumpUp = true;
+            }
+        }
+
+        if (isJumping) {
+            if (jumpUp) jumpCur += jumpSpeed;
+            else if (jumpDown) {
+                jumpCur -= jumpSpeed;
+                if (jumpCur <= 0) {
+                    isJumping = false;
+                    jumpDown = false;
+                    jumpUp = false;
+                }
+            }
+            z = jumpCur;
+            if (jumpCur >= jumpFrames) {
+                jumpUp = false;
+                jumpDown = true;
             }
         }
 
@@ -162,20 +193,21 @@ public class Player extends Entity {
         }
 
         if (dir == rightDir) {
-            g.drawImage(rightPlayer[animationIndex], getX() - Camera.x, getY() - Camera.y, getWidth(), getHeight(), null);
+            g.drawImage(rightPlayer[animationIndex], getX() - Camera.x, getY() - Camera.y - z, getWidth(), getHeight(), null);
             if (hasGun) {
-                g.drawImage(Entity.WEAPON_EN, this.getX() - Camera.x + 15, this.getY() - Camera.y + 2, 16, 16, null);
+                g.drawImage(Entity.WEAPON_EN, this.getX() - Camera.x + 15, this.getY() - Camera.y + 2 - z, 16, 16, null);
             }
         } else if (dir == leftDir) {
-            g.drawImage(leftPlayer[animationIndex], getX() - Camera.x, getY() -  Camera.y, getWidth(), getHeight(),null);
+            g.drawImage(leftPlayer[animationIndex], getX() - Camera.x, getY() -  Camera.y - z, getWidth(), getHeight(),null);
             if (hasGun) {
-                g.drawImage(Entity.WEAPON_LEFT, this.getX() - Camera.x - 13, this.getY() - Camera.y + 2, 16, 16, null);
+                g.drawImage(Entity.WEAPON_LEFT, this.getX() - Camera.x - 13, this.getY() - Camera.y + 2 - z, 16, 16, null);
             }
         }
 
-    }
-
-    public void checkDamageAnimation() {
+        if (isJumping) {
+            g.setColor(Color.black);
+            g.fillOval(getX() - Camera.x, getY() - Camera.y + 15, 8, 8);
+        }
 
     }
 

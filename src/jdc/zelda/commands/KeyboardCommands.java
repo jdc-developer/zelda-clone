@@ -48,6 +48,10 @@ public class KeyboardCommands implements KeyListener {
             Game.restartGame = true;
         }
 
+        if (e.getKeyCode() == KeyEvent.VK_Z) {
+            player.jump = true;
+        }
+
         if (Game.gameState.equals("MENU")) {
             if (e.getKeyCode() == KeyEvent.VK_UP) menu.up = true;
             if (e.getKeyCode() == KeyEvent.VK_DOWN) menu.down = true;

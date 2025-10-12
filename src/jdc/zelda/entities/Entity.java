@@ -18,6 +18,7 @@ public class Entity {
     protected double y;
     protected float width;
     protected float height;
+    protected int z;
 
     private BufferedImage sprite;
 
@@ -124,7 +125,11 @@ public class Entity {
         Rectangle rec1 = new Rectangle(e1.getX() + e1.getMaskX(), e1.getY() + e1.getMaskY(), e1.getMaskW(), e1.getMaskH());
         Rectangle rec2 = new Rectangle(e2.getX() + e2.getMaskX(), e2.getY() + e2.getMaskY(), e2.getMaskW(), e2.getMaskH());
 
-        return rec1.intersects(rec2);
+        if (rec1.intersects(rec2) && e1.z == e2.z) {
+            return true;
+        }
+
+        return false;
     }
 
     public void render(Graphics g) {
