@@ -62,6 +62,10 @@ public class KeyboardCommands implements KeyListener {
             Game.gameState = "MENU";
             menu.pause = true;
         }
+
+        if (e.getKeyCode() == KeyEvent.VK_SPACE && Game.gameState.equals("NORMAL")) {
+            Game.saveGame = true;
+        }
     }
 
     @Override

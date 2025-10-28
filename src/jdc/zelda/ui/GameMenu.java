@@ -1,19 +1,29 @@
 package jdc.zelda.ui;
 
 import jdc.zelda.Game;
+import jdc.zelda.world.World;
 
 import java.awt.*;
+import java.io.*;
 
 public class GameMenu {
+
+    private static final String SAVE_GAME_FILE = "save.txt";
 
     private String[] options = {"Novo Jogo", "Carregar Jogo", "Sair"};
 
     public int currentOption = 0;
     public int maxOptions = options.length - 1;
 
-    public boolean up, down, enter, pause;
+    public boolean up, down, enter;
+
+    public static boolean pause, saveExists, saveGame;
 
     public void tick() {
+        File file = new File(SAVE_GAME_FILE);
+        if (file.exists()) saveExists = true;
+        else saveExists = false;
+
         if (up) {
             up = false;
             currentOption--;
@@ -31,8 +41,86 @@ public class GameMenu {
             if (options[currentOption].equals("Novo Jogo") || options[currentOption].equals("Continuar")) {
                 pause = false;
                 Game.gameState = "NORMAL";
+                file.delete();
             }
             else if (options[currentOption].equals("Sair")) System.exit(0);
+            else if(options[currentOption].equals("Carregar Jogo")) {
+                if (file.exists()) {
+                    String saver = loadGame(10);
+                    applySave(saver);
+                }
+            }
+        }
+    }
+
+    public static void applySave(String str) {
+        String[] spl = str.split("/");
+        for (int i = 0; i < spl.length; i++) {
+            String[] spl2 = spl[i].split(":");
+            switch (spl2[0]) {
+                case "level":
+                    Game.restart("level-" + spl2[1] + ".png");
+                    Game.gameState = "NORMAL";
+                    pause = false;
+                    break;
+            }
+        }
+    }
+
+    public static String loadGame(int encode) {
+        String line = "";
+        File file = new File(SAVE_GAME_FILE);
+
+        if (file.exists()) {
+            try {
+                String singleLine = null;
+                BufferedReader bufferedReader = new BufferedReader(new FileReader(SAVE_GAME_FILE));
+                while ((singleLine = bufferedReader.readLine()) != null) {
+                    String[] trans = singleLine.split(":");
+                    char[] val = trans[1].toCharArray();
+                    trans[1] = "";
+
+                    for (int i = 0; i < val.length; i++) {
+                        val[i] -= encode;
+                        trans[1] += val[i];
+                    }
+
+                    line += trans[0];
+                    line += ":";
+                    line += trans[1];
+                    line += "/";
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        return line;
+    }
+
+    public static void saveGame(String[] val1, int[] val2, int encode) {
+        BufferedWriter bufferedWriter = null;
+        try {
+            bufferedWriter = new BufferedWriter(new FileWriter(SAVE_GAME_FILE));
+            for (int i = 0; i < val1.length; i++) {
+                String current = val1[i];
+                current += ":";
+                char[] value = Integer.toString(val2[i]).toCharArray();
+
+                for (int n = 0; n < value.length; n++) {
+                    value[n] += encode;
+                    current += value[n];
+                }
+
+                bufferedWriter.write(current);
+                if (i < val1.length - 1)
+                    bufferedWriter.newLine();
+
+                bufferedWriter.flush();
+                bufferedWriter.close();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

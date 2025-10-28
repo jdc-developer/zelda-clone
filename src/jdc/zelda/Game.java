@@ -51,6 +51,7 @@ public class Game extends Canvas implements Runnable {
     private int framesGameOver = 0;
 
     public static boolean restartGame = false;
+    public static boolean saveGame = false;
 
     private GameMenu menu;
 
@@ -74,8 +75,6 @@ public class Game extends Canvas implements Runnable {
         menu = new GameMenu();
         addKeyListener(new KeyboardCommands(player, menu));
         addMouseListener(new MouseCommands(player));
-
-
     }
 
     public static void restart(String level) {
@@ -127,6 +126,15 @@ public class Game extends Canvas implements Runnable {
 
     public void tick() {
         if (gameState.equals("NORMAL")) {
+
+            if (saveGame) {
+                saveGame = false;
+                String [] opt1 = {"level"};
+                int[] opt2 = {this.CUR_LEVEL};
+                GameMenu.saveGame(opt1, opt2,10);
+                System.out.println("Game saved");
+            }
+
             Game.restartGame = false;
             for(int i = 0; i < bullets.size(); i++) {
                 Bullet e = bullets.get(i);
