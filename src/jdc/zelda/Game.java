@@ -15,6 +15,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferInt;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -57,6 +58,10 @@ public class Game extends Canvas implements Runnable {
 
     private GameMenu menu;
 
+    public int[] pixels;
+
+    public int xx, yy;
+
     /*public InputStream stream = ClassLoader.getSystemClassLoader().getResourceAsStream("angel-wish.ttf");
     public Font font;*/
 
@@ -68,6 +73,7 @@ public class Game extends Canvas implements Runnable {
         ui = new UI();
 
         image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
+        pixels = ((DataBufferInt) image.getRaster().getDataBuffer()).getData();
         entities = new ArrayList<>();
         enemies = new ArrayList<>();
         bullets = new ArrayList<>();
@@ -217,6 +223,9 @@ public class Game extends Canvas implements Runnable {
         /***/
         g2.dispose();
         g = bs.getDrawGraphics();
+
+        //drawRectExmaple(xx, yy);
+
         g.drawImage(image, 0, 0, WIDTH * SCALE, HEIGHT * SCALE, null);
         g.setFont(new Font("arial", Font.BOLD, 17));
         g.setColor(Color.white);
@@ -247,6 +256,20 @@ public class Game extends Canvas implements Runnable {
 
         bs.show();
     }
+
+    /*private void drawRectExmaple(int xoff, int yoff) {
+        for (int xx = 0; xx< 32; xx++) {
+            for (int yy = 0; yy< 32; yy++) {
+                int xOff = xx + xoff;
+                int yOff = yy + yoff;
+
+                if (xOff < 0 || yOff < 0 || xOff >= WIDTH || yOff >= HEIGHT)
+                    continue;
+
+                pixels[xOff + (yOff*WIDTH)] = 0xff0000;
+            }
+        }
+    }*/
 
     @Override
     public void run() {

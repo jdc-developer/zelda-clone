@@ -39,29 +39,30 @@ public class Enemy extends Entity {
     }
 
     public void tick() {
-        if (!isCollidingWithPlayer()) {
-            if (Game.rand.nextInt(100) < 30) {
-                if (x < Game.player.getX() && World.isFree((int)(getX() + speed), getY()) &&
-                        !isColliding((int)(getX() + speed), getY())) x+=speed;
-                else if (x > Game.player.getX() && World.isFree((int)(getX() - speed), getY()) &&
-                        !isColliding((int)(getX() - speed), getY())) x-=speed;
+        if (this.calculateDistance(getX(), getY(), Game.player.getX(), Game.player.getY()) < 200) {
+            if (!isCollidingWithPlayer()) {
+                if (Game.rand.nextInt(100) < 30) {
+                    if (x < Game.player.getX() && World.isFree((int)(getX() + speed), getY()) &&
+                            !isColliding((int)(getX() + speed), getY())) x+=speed;
+                    else if (x > Game.player.getX() && World.isFree((int)(getX() - speed), getY()) &&
+                            !isColliding((int)(getX() - speed), getY())) x-=speed;
 
-                if (y < Game.player.getY() && World.isFree(getX(), (int)(getY() + speed)) &&
-                        !isColliding(getX(), (int)(getY() + speed))) y+=speed;
-                else if (y > Game.player.getY() && World.isFree(getX(), (int)(getY() - speed)) &&
-                        !isColliding(getX(), (int)(getY() - speed))) y-=speed;
-            }
-        } else {
-            if (Game.rand.nextInt(100) < 20) {
-                //Sound.hurtSound.play();
-                Game.player.life--;
-                Player.isTakingDamage = true;
-                System.out.println(Game.player.life);
-            }
+                    if (y < Game.player.getY() && World.isFree(getX(), (int)(getY() + speed)) &&
+                            !isColliding(getX(), (int)(getY() + speed))) y+=speed;
+                    else if (y > Game.player.getY() && World.isFree(getX(), (int)(getY() - speed)) &&
+                            !isColliding(getX(), (int)(getY() - speed))) y-=speed;
+                }
+            } else {
+                if (Game.rand.nextInt(100) < 20) {
+                    //Sound.hurtSound.play();
+                    Game.player.life--;
+                    Player.isTakingDamage = true;
+                    System.out.println(Game.player.life);
+                }
 
-            //if (Game.player.life == 0) System.exit(1);
+                //if (Game.player.life == 0) System.exit(1);
+            }
         }
-
 
         frames++;
 
