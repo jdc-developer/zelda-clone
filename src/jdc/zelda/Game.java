@@ -8,7 +8,6 @@ import jdc.zelda.entities.Entity;
 import jdc.zelda.entities.Player;
 import jdc.zelda.graphics.Spritesheet;
 import jdc.zelda.graphics.UI;
-import jdc.zelda.sound.Sound;
 import jdc.zelda.ui.GameMenu;
 import jdc.zelda.world.World;
 
@@ -16,6 +15,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -53,7 +53,12 @@ public class Game extends Canvas implements Runnable {
     public static boolean restartGame = false;
     public static boolean saveGame = false;
 
+    public static int mx, my;
+
     private GameMenu menu;
+
+    /*public InputStream stream = ClassLoader.getSystemClassLoader().getResourceAsStream("angel-wish.ttf");
+    public Font font;*/
 
     public Game() {
         //Sound.musicBackground.loop();
@@ -73,8 +78,17 @@ public class Game extends Canvas implements Runnable {
         world = new World("/level-1.png");
         entities.add(player);
         menu = new GameMenu();
+
+        /*try {
+            font = Font.createFont(Font.TRUETYPE_FONT, stream).deriveFont(70f);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }*/
+
+        MouseCommands mouseCommands = new MouseCommands(player);
         addKeyListener(new KeyboardCommands(player, menu));
-        addMouseListener(new MouseCommands(player));
+        addMouseListener(mouseCommands);
+        addMouseMotionListener(mouseCommands);
     }
 
     public static void restart(String level) {
@@ -207,6 +221,8 @@ public class Game extends Canvas implements Runnable {
         g.setFont(new Font("arial", Font.BOLD, 17));
         g.setColor(Color.white);
         g.drawString("Munição: " + player.getAmmo(), 30, 20);
+        /*g.setFont(font);
+        g.drawString("Teste new font", 20, 70);*/
 
         Graphics2D g22 = (Graphics2D) g;
         if (gameState.equals("GAME_OVER")) {
@@ -223,6 +239,11 @@ public class Game extends Canvas implements Runnable {
         } else if (gameState.equals("MENU")) {
             menu.render(g22);
         }
+
+        /*double angleMouse = Math.atan2(200+25 - my, 200+25 - mx);
+        g22.rotate(angleMouse, 200 + 25, 200 + 25);
+        g22.setColor(Color.red);
+        g22.fillRect(200, 200, 50, 50);*/
 
         bs.show();
     }

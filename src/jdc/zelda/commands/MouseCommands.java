@@ -6,8 +6,9 @@ import jdc.zelda.world.Camera;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 
-public class MouseCommands implements MouseListener {
+public class MouseCommands implements MouseListener, MouseMotionListener {
 
     private Player player;
 
@@ -42,5 +43,16 @@ public class MouseCommands implements MouseListener {
     @Override
     public void mouseExited(MouseEvent e) {
 
+    }
+
+    @Override
+    public void mouseDragged(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseMoved(MouseEvent e) {
+        Game.mx = e.getX();
+        Game.my = e.getY();
     }
 }

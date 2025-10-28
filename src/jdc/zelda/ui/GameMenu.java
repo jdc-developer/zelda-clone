@@ -91,7 +91,7 @@ public class GameMenu {
                     line += "/";
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                throw new RuntimeException(e);
             }
         }
 
@@ -120,7 +120,7 @@ public class GameMenu {
                 bufferedWriter.close();
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 
