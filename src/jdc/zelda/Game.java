@@ -11,11 +11,13 @@ import jdc.zelda.graphics.UI;
 import jdc.zelda.ui.GameMenu;
 import jdc.zelda.world.World;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -59,6 +61,8 @@ public class Game extends Canvas implements Runnable {
     private GameMenu menu;
 
     public int[] pixels;
+    public BufferedImage lightMap;
+    public int[] lightMapPixels;
 
     public int xx, yy;
 
@@ -80,6 +84,13 @@ public class Game extends Canvas implements Runnable {
         spritesheet = new Spritesheet("/spritesheet.png");
         enemySpritesheet = new Spritesheet("/enemies.png");
         tileset = new Spritesheet("/tileset.png");
+        try {
+            lightMap = ImageIO.read(getClass().getResourceAsStream("/light-map.png"));
+            lightMapPixels = new int[lightMap.getWidth() * lightMap.getHeight()];
+            lightMap.getRGB(0, 0, lightMap.getWidth(), lightMap.getHeight(), lightMapPixels, 0, lightMap.getWidth());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         player = new Player(0, 0, spritesheet.getSprite(0, 0, Player.WIDTH, Player.HEIGHT));
         world = new World("/level-1.png");
         entities.add(player);
@@ -218,6 +229,8 @@ public class Game extends Canvas implements Runnable {
             Bullet e = bullets.get(i);
             e.render(g2);
         }
+
+        applyLight();
         ui.render(g2);
 
         /***/
@@ -255,6 +268,16 @@ public class Game extends Canvas implements Runnable {
         g22.fillRect(200, 200, 50, 50);*/
 
         bs.show();
+    }
+
+    private void applyLight() {
+        for (int xx = 0; xx< WIDTH; xx++) {
+            for (int yy = 0; yy < HEIGHT; yy++) {
+                if (lightMapPixels[xx+(yy * WIDTH)] == 0xffffffff) {
+                    pixels[xx+(yy * WIDTH)] = 0;
+                }
+            }
+        }
     }
 
     /*private void drawRectExmaple(int xoff, int yoff) {
