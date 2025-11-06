@@ -1,9 +1,9 @@
 package jdc.zelda.entities;
 
 import jdc.zelda.Game;
-import jdc.zelda.sound.Sound;
+import jdc.zelda.world.AStar;
 import jdc.zelda.world.Camera;
-import jdc.zelda.world.World;
+import jdc.zelda.world.Vector2i;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -39,6 +39,8 @@ public class Enemy extends Entity {
     }
 
     public void tick() {
+
+        /*
         if (this.calculateDistance(getX(), getY(), Game.player.getX(), Game.player.getY()) < 200) {
             if (!isCollidingWithPlayer()) {
                 if (Game.rand.nextInt(100) < 30) {
@@ -62,7 +64,15 @@ public class Enemy extends Entity {
 
                 //if (Game.player.life == 0) System.exit(1);
             }
+        }*/
+
+        if (path == null || path.isEmpty()) {
+            Vector2i start = new Vector2i(getX() / 16, getY() / 16);
+            Vector2i end = new Vector2i(Game.player.getX() / 16, Game.player.getY() / 16);
+            path = AStar.findPath(Game.world, start, end);
         }
+
+        followPath(path);
 
         frames++;
 
@@ -117,19 +127,5 @@ public class Enemy extends Entity {
         Rectangle playerRect = new Rectangle(Game.player.getX(), Game.player.getY(), 16, 16);
 
         return currentEnemy.intersects(playerRect);
-    }
-
-    public boolean isColliding(int xnext, int ynext) {
-        Rectangle currentEnemy = new Rectangle(xnext + getMaskX(), ynext + getMaskY(), getMaskW(), getMaskH());
-
-        for (int i = 0; i < Game.enemies.size(); i++) {
-            Enemy e = Game.enemies.get(i);
-            if (e == this)
-                continue;
-            Rectangle targetEnemy = new Rectangle(e.getX() + getMaskX(), e.getY() + getMaskY(), getMaskW(), getMaskH());
-            if (currentEnemy.intersects(targetEnemy)) return true;
-        }
-
-        return false;
     }
 }

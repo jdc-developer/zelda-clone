@@ -173,7 +173,7 @@ public class Player extends Entity {
         updateCamera();
     }
 
-    private void updateCamera() {
+    public void updateCamera() {
         Camera.x = Camera.clamp(this.getX() - (Game.WIDTH / 2), 0, World.WIDTH*16 - Game.WIDTH);
         Camera.y = Camera.clamp(this.getY() - (Game.HEIGHT / 2), 0, World.HEIGHT*16 - Game.HEIGHT);
     }

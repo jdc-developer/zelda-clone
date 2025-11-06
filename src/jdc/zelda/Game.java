@@ -18,7 +18,6 @@ import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -201,6 +200,7 @@ public class Game extends Canvas implements Runnable {
                 Game.restart(newWorld);
             }
         } else if (gameState.equals("MENU")) {
+            player.updateCamera();
             menu.tick();
         }
 
@@ -230,7 +230,7 @@ public class Game extends Canvas implements Runnable {
             e.render(g2);
         }
 
-        applyLight();
+        //applyLight();
         ui.render(g2);
 
         /***/

@@ -40,7 +40,7 @@ public class World {
                             //Player
                             Game.player.setX(xx*16);
                             Game.player.setY(yy*16);
-                            tiles[xx + (yy * WIDTH)] = new FloorTile(xx * 16, yy * 16, Tile.TILE_FLOOR);
+                            //tiles[xx + (yy * WIDTH)] = new FloorTile(xx * 16, yy * 16, Tile.TILE_FLOOR);
                             break;
                         case 0XFFFF0000:
                             //Enemy
@@ -63,7 +63,7 @@ public class World {
                             Game.entities.add(new Ammo(xx*16, yy*16, 16, 16, Entity.AMMO_EN));
                             break;
                         default:
-                            //tiles[xx + (yy * WIDTH)] = new FloorTile(xx * 16, yy * 16, Tile.TILE_FLOOR);
+                            tiles[xx + (yy * WIDTH)] = new FloorTile(xx * 16, yy * 16, Tile.TILE_FLOOR);
                             break;
                     }
                 }
@@ -80,8 +80,8 @@ public class World {
         int xfinal = xstart + Game.WIDTH >> 3;
         int yfinal = ystart + Game.HEIGHT >> 3;
 
-        for (int xx = xstart; xx <= xfinal; xx++) {
-            for (int yy = ystart; yy <= yfinal; yy++) {
+        for (int xx = xstart; xx <= WIDTH; xx++) {
+            for (int yy = ystart; yy <= HEIGHT; yy++) {
                 if (xx < 0 || yy < 0 || xx >= WIDTH || yy >= HEIGHT)
                     continue;
                 Tile tile = tiles[xx + (yy * WIDTH)];
@@ -112,5 +112,9 @@ public class World {
 
         if (Game.player.z > 0) return true;
         return false;
+    }
+
+    public static Tile[] getTiles() {
+        return tiles;
     }
 }

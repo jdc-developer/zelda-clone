@@ -1,11 +1,15 @@
 package jdc.zelda.entities;
 
+import jdc.zelda.Game;
 import jdc.zelda.world.Camera;
+import jdc.zelda.world.Node;
+import jdc.zelda.world.Vector2i;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.List;
 
 public class Entity {
 
@@ -19,6 +23,8 @@ public class Entity {
     protected float width;
     protected float height;
     protected int z;
+
+    protected List<Node> path;
 
     private BufferedImage sprite;
 
@@ -131,6 +137,40 @@ public class Entity {
 
         if (rec1.intersects(rec2) && e1.z == e2.z) {
             return true;
+        }
+
+        return false;
+    }
+
+    public void followPath(List<Node> path) {
+        if (path != null) {
+            if (!path.isEmpty()) {
+                Vector2i target = path.get(path.size() - 1).tile;
+                //xprev = x;
+                //yprev = y;
+
+                if (x < target.x * 16) x++;
+                else if (x > target.x * 16) x--;
+
+                if (y < target.y * 16) y++;
+                else if (y > target.y * 16) y--;
+
+                if (x == target.x * 16 && y == target.y * 16) {
+                    path.remove(path.size() - 1);
+                }
+            }
+        }
+    }
+
+    public boolean isColliding(int xnext, int ynext) {
+        Rectangle currentEnemy = new Rectangle(xnext + getMaskX(), ynext + getMaskY(), getMaskW(), getMaskH());
+
+        for (int i = 0; i < Game.enemies.size(); i++) {
+            Enemy e = Game.enemies.get(i);
+            if (e == this)
+                continue;
+            Rectangle targetEnemy = new Rectangle(e.getX() + getMaskX(), e.getY() + getMaskY(), getMaskW(), getMaskH());
+            if (currentEnemy.intersects(targetEnemy)) return true;
         }
 
         return false;
