@@ -59,6 +59,8 @@ public class Player extends Entity {
             leftPlayer[i] = Game.spritesheet.getSprite(0 + (i*WIDTH), 487.5f, WIDTH, HEIGHT);
         }
 
+        depth = 1;
+
     }
 
     public void tick() {

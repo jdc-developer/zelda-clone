@@ -7,6 +7,7 @@ import jdc.zelda.world.Vector2i;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.Random;
 
 public class Enemy extends Entity {
 
@@ -36,6 +37,8 @@ public class Enemy extends Entity {
         for (int i = 0; i < 11; i++) {
             sprites[i] = Game.enemySpritesheet.getSprite(0 + (i*WIDTH), 72f, WIDTH, HEIGHT);
         }
+
+        depth = 0;
     }
 
     public void tick() {
@@ -66,10 +69,17 @@ public class Enemy extends Entity {
             }
         }*/
 
-        if (path == null || path.isEmpty()) {
-            Vector2i start = new Vector2i(getX() / 16, getY() / 16);
-            Vector2i end = new Vector2i(Game.player.getX() / 16, Game.player.getY() / 16);
-            path = AStar.findPath(Game.world, start, end);
+        if (!isCollidingWithPlayer()) {
+            if (path == null || path.isEmpty()) {
+                Vector2i start = new Vector2i(getX() / 16, getY() / 16);
+                Vector2i end = new Vector2i(Game.player.getX() / 16, Game.player.getY() / 16);
+                path = AStar.findPath(Game.world, start, end);
+            }
+        } else if (new Random().nextInt(100) < 5) {
+            //Sound.hurtSound.play();
+            Game.player.life--;
+            Player.isTakingDamage = true;
+            System.out.println(Game.player.life);
         }
 
         followPath(path);
@@ -119,7 +129,7 @@ public class Enemy extends Entity {
         }
         g.drawImage(sprites[animationIndex], getX() - Camera.x, getY() - Camera.y, getWidth(), getHeight(), null);
         //g.setColor(Color.BLUE);
-        //g.fillRect(getX() + maskx - Camera.x, getY() + masky - Camera.y, maskw, maskh);
+        //g.fillRect(getX() + getMaskX() - Camera.x, getY() + getMaskY() - Camera.y, getMaskW(), getMaskH());
     }
 
     public boolean isCollidingWithPlayer() {

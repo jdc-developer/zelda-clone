@@ -73,6 +73,25 @@ public class World {
         }
     }
 
+    public static void renderMiniMap() {
+        for (int i = 0; i < Game.minimapPixels.length; i++) {
+            Game.minimapPixels[i] = 0;
+        }
+
+        for (int xx = 0; xx < WIDTH; xx++) {
+            for(int yy = 0; yy < HEIGHT; yy++) {
+                if (tiles[xx + (yy*WIDTH)] instanceof WallTile) {
+                    Game.minimapPixels[xx + (yy*WIDTH)] = 0XFF0000;
+                }
+            }
+        }
+
+        int xPlayer = Game.player.getX() / 16;
+        int yPlayer = Game.player.getY() / 16;
+
+        Game.minimapPixels[xPlayer + (yPlayer * WIDTH)] = 0X0000FF;
+    }
+
     public void render(Graphics g) {
         int xstart = Camera.x >> 4;
         int ystart = Camera.y >> 4;

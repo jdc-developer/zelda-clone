@@ -19,6 +19,7 @@ import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -63,6 +64,9 @@ public class Game extends Canvas implements Runnable {
     public BufferedImage lightMap;
     public int[] lightMapPixels;
 
+    public static BufferedImage minimap;
+    public static int[] minimapPixels;
+
     public int xx, yy;
 
     /*public InputStream stream = ClassLoader.getSystemClassLoader().getResourceAsStream("angel-wish.ttf");
@@ -91,9 +95,12 @@ public class Game extends Canvas implements Runnable {
             throw new RuntimeException(e);
         }
         player = new Player(0, 0, spritesheet.getSprite(0, 0, Player.WIDTH, Player.HEIGHT));
-        world = new World("/level-1.png");
+        world = new World("/level-3.png");
         entities.add(player);
         menu = new GameMenu();
+
+        minimap = new BufferedImage(World.WIDTH, World.HEIGHT, BufferedImage.TYPE_INT_RGB);
+        minimapPixels = ((DataBufferInt) minimap.getRaster().getDataBuffer()).getData();
 
         /*try {
             font = Font.createFont(Font.TRUETYPE_FONT, stream).deriveFont(70f);
@@ -220,6 +227,7 @@ public class Game extends Canvas implements Runnable {
         //RENDER GAME
         Graphics2D g2 = (Graphics2D) g;
         world.render(g);
+        Collections.sort(entities, Entity.depthComparator);
         for(int i = 0; i < entities.size(); i++) {
             Entity e = entities.get(i);
             e.render(g2);
@@ -261,6 +269,9 @@ public class Game extends Canvas implements Runnable {
         } else if (gameState.equals("MENU")) {
             menu.render(g22);
         }
+
+        World.renderMiniMap();
+        g22.drawImage(minimap,600, 360, World.WIDTH * 5, World.HEIGHT * 5, null);
 
         /*double angleMouse = Math.atan2(200+25 - my, 200+25 - mx);
         g22.rotate(angleMouse, 200 + 25, 200 + 25);

@@ -9,6 +9,7 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.Comparator;
 import java.util.List;
 
 public class Entity {
@@ -23,6 +24,8 @@ public class Entity {
     protected float width;
     protected float height;
     protected int z;
+
+    public int depth;
 
     protected List<Node> path;
 
@@ -51,6 +54,16 @@ public class Entity {
             throw new RuntimeException(e);
         }
     }
+
+    public static Comparator<Entity> depthComparator = new Comparator<Entity>(){
+
+        @Override
+        public int compare(Entity o1, Entity o2) {
+            if (o1.depth < o2.depth) return - 1;
+            if (o1.depth > o2.depth) return + 1;
+            return 0;
+        }
+    };
 
     public void setMask(float maskX, float maskY, float maskW, float maskH) {
         this.maskX = maskX;
