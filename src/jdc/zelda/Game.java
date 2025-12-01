@@ -8,6 +8,7 @@ import jdc.zelda.entities.Entity;
 import jdc.zelda.entities.Player;
 import jdc.zelda.graphics.Spritesheet;
 import jdc.zelda.graphics.UI;
+import jdc.zelda.sound.Sound;
 import jdc.zelda.ui.GameMenu;
 import jdc.zelda.world.World;
 
@@ -74,6 +75,7 @@ public class Game extends Canvas implements Runnable {
 
     public Game() {
         //Sound.musicBackground.loop();
+        //Sound.music.loop();
         rand = new Random();
         setPreferredSize(new Dimension(WIDTH * SCALE, HEIGHT * SCALE));
         initFrame();
@@ -95,8 +97,8 @@ public class Game extends Canvas implements Runnable {
             throw new RuntimeException(e);
         }
         player = new Player(0, 0, spritesheet.getSprite(0, 0, Player.WIDTH, Player.HEIGHT));
-        //world = new World("/level-3.png");
-        world = new World();
+        world = new World("/level-3.png");
+        //world = new World();
         entities.add(player);
         menu = new GameMenu();
 
@@ -140,6 +142,19 @@ public class Game extends Canvas implements Runnable {
         frame.setLocationRelativeTo(null);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
+
+
+        try {
+            Image iconImage = ImageIO.read(getClass().getResourceAsStream("/icon.png"));
+            Toolkit toolkit = Toolkit.getDefaultToolkit();
+            Image image = toolkit.getImage(getClass().getResource("/icon.png"));
+            Cursor c = toolkit.createCustomCursor(image, new Point(0, 0), "img");
+            frame.setCursor(c);
+            frame.setIconImage(iconImage);
+            frame.setAlwaysOnTop(true);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public static void main(String[] args) {

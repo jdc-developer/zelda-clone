@@ -1,42 +1,70 @@
 package jdc.zelda.sound;
 
-import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.DataInputStream;
+import java.io.IOException;
 
 public class Sound {
 
-    private Clip clip;
+    public static class Clips {
 
-    public final static Sound musicBackground = new Sound("/music.wav");
-    public final static Sound hurtSound = new Sound("/hurt.wav");
+        public Clip[] clips;
+        private int p;
+        private int count;
 
-    private Sound(String path) {
-        try {
-            clip = AudioSystem.getClip();
-            AudioInputStream inputStream = AudioSystem.getAudioInputStream(getClass().getResourceAsStream(path));
-            clip.open(inputStream);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+        public Clips(byte[] buffer, int count) throws LineUnavailableException, IOException, UnsupportedAudioFileException {
+            if (buffer == null) return;
+
+            clips = new Clip[count];
+            this.count = count;
+
+            for (int i = 0; i < count; i++) {
+                clips[i] = AudioSystem.getClip();
+                clips[i].open(AudioSystem.getAudioInputStream(new ByteArrayInputStream(buffer)));
+            }
+        }
+
+        public void play() {
+            if (clips == null) return;
+            clips[p].stop();
+            clips[p].setFramePosition(0);
+            clips[p].start();
+
+            p++;
+            if (p >= count) p = 0;
+        }
+
+        public void loop() {
+            if (clips == null) return;
+            clips[p].loop(300);
         }
     }
 
-    public void play() {
-        try {
-            new Thread(() -> {
-                clip.setFramePosition(0);
-                clip.start();
-            }).start();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
+    public static Clips music = load("/music.wav", 1);
 
-    public void loop() {
+    private static Clips load(String name, int count) {
         try {
-            new Thread(() -> clip.loop(Clip.LOOP_CONTINUOUSLY)).start();
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            DataInputStream dis = new DataInputStream(Sound.class.getResourceAsStream(name));
+
+            byte[] buffer = new byte[1024];
+            int read;
+            while((read = dis.read(buffer)) >= 0) {
+                baos.write(buffer, 0, read);
+            }
+            dis.close();
+            byte[] data = baos.toByteArray();
+
+            return new Clips(data, count);
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
+
+        return null;
     }
 }

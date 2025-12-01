@@ -1,8 +1,12 @@
 package jdc.zelda.world;
 
 import jdc.zelda.Game;
+import jdc.zelda.entities.*;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 
 public class World {
 
@@ -10,7 +14,7 @@ public class World {
     public static int WIDTH, HEIGHT;
     public static final int TILE_SIZE = 16;
 
-    /*public World(String path) {
+    public World(String path) {
         try {
             BufferedImage map = ImageIO.read(getClass().getResourceAsStream(path));
             int[] pixels = new int[map.getWidth() * map.getHeight()];
@@ -67,9 +71,9 @@ public class World {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-    }*/
+    }
 
-    public World() {
+    /*public World() {
         Game.player.setX(0);
         Game.player.setY(0);
         WIDTH = 100;
@@ -104,7 +108,7 @@ public class World {
 
             if (Game.rand.nextInt(100) < 30) dir = Game.rand.nextInt(4);
         }
-    }
+    }*/
 
     public static void renderMiniMap() {
         for (int i = 0; i < Game.minimapPixels.length; i++) {
