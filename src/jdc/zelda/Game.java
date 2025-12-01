@@ -95,7 +95,8 @@ public class Game extends Canvas implements Runnable {
             throw new RuntimeException(e);
         }
         player = new Player(0, 0, spritesheet.getSprite(0, 0, Player.WIDTH, Player.HEIGHT));
-        world = new World("/level-3.png");
+        //world = new World("/level-3.png");
+        world = new World();
         entities.add(player);
         menu = new GameMenu();
 
@@ -121,7 +122,7 @@ public class Game extends Canvas implements Runnable {
         player.setY(0);
         player.life = Player.MAX_LIFE;
         entities.add(player);
-        world = new World("/" + level);
+        //world = new World("/" + level);
     }
 
     public static BufferedImage scaleImage(BufferedImage originalImage, int targetWidth, int targetHeight) {
@@ -183,12 +184,12 @@ public class Game extends Canvas implements Runnable {
                 e.tick();
             }
 
-            if (enemies.isEmpty()) {
+            /*if (enemies.isEmpty()) {
                 CUR_LEVEL++;
                 if (CUR_LEVEL > MAX_LEVEL)  CUR_LEVEL = 1;
                 String newWorld = "level-"+CUR_LEVEL+".png";
                 Game.restart(newWorld);
-            }
+            }*/
         } else if (gameState.equals("GAME_OVER")) {
             framesGameOver++;
             if(framesGameOver == 30) {
@@ -271,7 +272,7 @@ public class Game extends Canvas implements Runnable {
         }
 
         World.renderMiniMap();
-        g22.drawImage(minimap,600, 360, World.WIDTH * 5, World.HEIGHT * 5, null);
+        //g22.drawImage(minimap,600, 360, World.WIDTH * 5, World.HEIGHT * 5, null);
 
         /*double angleMouse = Math.atan2(200+25 - my, 200+25 - mx);
         g22.rotate(angleMouse, 200 + 25, 200 + 25);

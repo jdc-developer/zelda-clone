@@ -22,7 +22,7 @@ public class Player extends Entity {
     public boolean right, up, left, down;
     public int rightDir = 0, leftDir = 1;
     public int dir = rightDir;
-    public float speed = 1.5f;
+    public int speed = 1;
     public float life = MAX_LIFE;
 
     private int frames = 0, maxFrames = 5, animationIndex = 0, maxAnimationIndex = 9;
@@ -60,27 +60,29 @@ public class Player extends Entity {
         }
 
         depth = 1;
+        this.maskW = 80f / SUBSCALE;
+        this.maskH = 79.5f / SUBSCALE;
 
     }
 
     public void tick() {
         moved = false;
-        if (right && World.isFree((int)(getX() + speed), getY())) {
+        if (right && World.isFree((getX() + speed), getY())) {
             moved = true;
             dir = rightDir;
             x += speed;
         }
-        else if (left && World.isFree((int)(getX() - speed), getY())) {
+        if (left && World.isFree((getX() - speed), getY())) {
             moved = true;
             dir = leftDir;
             x -= speed;
         }
 
-        if (up && World.isFree(getX(), (int)(getY() - speed))) {
+        if (up && World.isFree(getX(), (getY() - speed))) {
             moved = true;
             y -= speed;
         }
-        else if (down && World.isFree(getX(), (int)(getY() + speed))) {
+        if (down && World.isFree(getX(), (getY() + speed))) {
             moved = true;
             y += speed;
         }
@@ -205,6 +207,9 @@ public class Player extends Entity {
                 g.drawImage(Entity.WEAPON_LEFT, this.getX() - Camera.x - 13, this.getY() - Camera.y + 2 - z, 16, 16, null);
             }
         }
+
+        //g.setColor(Color.BLUE);
+        //g.fillRect(getX() + getMaskX() - Camera.x, getY() + getMaskY() - Camera.y, getMaskW(), getMaskH());
 
         if (isJumping) {
             g.setColor(Color.black);

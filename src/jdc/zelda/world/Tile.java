@@ -7,7 +7,7 @@ import java.awt.image.BufferedImage;
 
 public class Tile {
 
-    public static BufferedImage TILE_FLOOR = Game.tileset.getSprite(1, 1, 16, 16);
+    public static BufferedImage TILE_FLOOR = Game.tileset.getSprite(1, 1, 18, 18);
     public static BufferedImage TILE_WALL = Game.tileset.getSprite(281, 342, 16, 16);
 
     private BufferedImage sprite;

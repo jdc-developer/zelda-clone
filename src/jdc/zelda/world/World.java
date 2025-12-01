@@ -1,12 +1,8 @@
 package jdc.zelda.world;
 
 import jdc.zelda.Game;
-import jdc.zelda.entities.*;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
 
 public class World {
 
@@ -14,7 +10,7 @@ public class World {
     public static int WIDTH, HEIGHT;
     public static final int TILE_SIZE = 16;
 
-    public World(String path) {
+    /*public World(String path) {
         try {
             BufferedImage map = ImageIO.read(getClass().getResourceAsStream(path));
             int[] pixels = new int[map.getWidth() * map.getHeight()];
@@ -70,6 +66,43 @@ public class World {
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
+        }
+    }*/
+
+    public World() {
+        Game.player.setX(0);
+        Game.player.setY(0);
+        WIDTH = 100;
+        HEIGHT = 100;
+        tiles = new Tile[WIDTH * HEIGHT];
+
+        for (int xx = 0; xx < WIDTH; xx++) {
+            for (int yy = 0; yy < HEIGHT; yy++) {
+                tiles[xx + (yy * WIDTH)] = new WallTile(xx * 16, yy * 16, Tile.TILE_WALL);
+            }
+        }
+
+        int dir = 0;
+        int xx = 0, yy = 0;
+
+        for (int i = 0; i < 200; i++) {
+            tiles[xx + (yy * WIDTH)] = new FloorTile(xx * 16, yy * 16, Tile.TILE_FLOOR);
+            switch (dir) {
+                case 0:
+                    if (xx < WIDTH) xx++;
+                    break;
+                case 1:
+                    if (xx > 0) xx--;
+                    break;
+                case 2:
+                    if (yy < HEIGHT) yy++;
+                    break;
+                case 3:
+                    if (yy > 0) yy--;
+                    break;
+            }
+
+            if (Game.rand.nextInt(100) < 30) dir = Game.rand.nextInt(4);
         }
     }
 
@@ -129,8 +162,7 @@ public class World {
             return true;
         }
 
-        if (Game.player.z > 0) return true;
-        return false;
+        return Game.player.z > 0;
     }
 
     public static Tile[] getTiles() {
