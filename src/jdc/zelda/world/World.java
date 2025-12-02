@@ -44,9 +44,9 @@ public class World {
                             break;
                         case 0XFFFF0000:
                             //Enemy
-                            /*Enemy en = new Enemy(xx*16, yy*16, 40, 48, Game.enemySpritesheet.getSprite(0, 72, Enemy.WIDTH, Enemy.HEIGHT));
+                            Enemy en = new Enemy(xx*16, yy*16, 40, 48, Game.enemySpritesheet.getSprite(0, 72, Enemy.WIDTH, Enemy.HEIGHT));
                             Game.entities.add(en);
-                            Game.enemies.add(en);*/
+                            Game.enemies.add(en);
                             break;
                         case 0XFFFFA200:
                             //Weapon
@@ -54,12 +54,12 @@ public class World {
                             break;
                         case 0XFFEB76C3:
                             //Potion
-                            /*Potion potion = new Potion(xx*16, yy*16, 30, 30, Entity.LIFEPOTION_EN);
+                            Potion potion = new Potion(xx*16, yy*16, 30, 30, Entity.LIFEPOTION_EN);
                             potion.setMask(10, 10, 10f, 15f);
-                            Game.entities.add(potion);*/
+                            Game.entities.add(potion);
 
-                            NPC npc = new NPC(xx*16, yy*16, 15, 25, Game.npcSpritesheet.getSprite(214, 131, NPC.WIDTH, NPC.HEIGHT));
-                            Game.entities.add(npc);
+                            /*NPC npc = new NPC(xx*16, yy*16, 15, 25, Game.npcSpritesheet.getSprite(214, 131, NPC.WIDTH, NPC.HEIGHT));
+                            Game.entities.add(npc);*/
                             break;
                         case 0XFFF8FB05:
                             //Ammo
@@ -166,6 +166,35 @@ public class World {
                 (tiles[x2 + (y2 * World.WIDTH)] instanceof WallTile) ||
                 (tiles[x3 + (y3 * World.WIDTH)] instanceof WallTile) ||
                         (tiles[x4 + (y4 * World.WIDTH)] instanceof WallTile))) {
+            return true;
+        }
+
+        return Game.player.z > 0;
+    }
+
+    public static void generateParticles(int amount, int x, int y) {
+        for (int i = 0; i < amount; i++) {
+            Game.entities.add(new Particle(x, y, 1, 1, null));
+        }
+    }
+
+    public static boolean isFreeDynamic(int xnext, int ynext, int width, int height) {
+        int x1 = xnext / TILE_SIZE;
+        int y1 = ynext / TILE_SIZE;
+
+        int x2 = (xnext + width - 1) / TILE_SIZE;
+        int y2 = ynext / TILE_SIZE;
+
+        int x3 = xnext / TILE_SIZE;
+        int y3 = (ynext + height - 1) / TILE_SIZE;
+
+        int x4 = (xnext + width - 1) / TILE_SIZE;
+        int y4 = (ynext + height - 1) / TILE_SIZE;
+
+        if (!((tiles[x1 + (y1 * World.WIDTH)] instanceof WallTile) ||
+                (tiles[x2 + (y2 * World.WIDTH)] instanceof WallTile) ||
+                (tiles[x3 + (y3 * World.WIDTH)] instanceof WallTile) ||
+                (tiles[x4 + (y4 * World.WIDTH)] instanceof WallTile))) {
             return true;
         }
 

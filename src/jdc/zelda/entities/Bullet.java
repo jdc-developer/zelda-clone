@@ -2,6 +2,7 @@ package jdc.zelda.entities;
 
 import jdc.zelda.Game;
 import jdc.zelda.world.Camera;
+import jdc.zelda.world.World;
 
 import java.awt.*;
 
@@ -19,8 +20,16 @@ public class Bullet extends Entity {
     }
 
     public void tick() {
-        x += dx * speed;
-        y += dy * speed;
+        if (World.isFreeDynamic((int)(x + (dx*speed)), (int)(y + (dy * speed)), 3, 3)) {
+            x += dx * speed;
+            y += dy * speed;
+        } else {
+
+            Game.bullets.remove(this);
+            //World.generateParticles(5, getX(), getY());
+            return;
+        }
+
         curLife++;
 
         if (curLife == life) Game.bullets.remove(this);

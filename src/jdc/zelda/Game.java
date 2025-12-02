@@ -72,7 +72,7 @@ public class Game extends Canvas implements Runnable {
     public static int entry = 1;
     public static int start = 2;
     public static int playing = 3;
-    public static int state = entry;
+    public static int state = playing;
 
     public int timeCena = 0, maxTimeCena = 60*3;
 
