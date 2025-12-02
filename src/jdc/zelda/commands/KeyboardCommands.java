@@ -1,6 +1,7 @@
 package jdc.zelda.commands;
 
 import jdc.zelda.Game;
+import jdc.zelda.entities.NPC;
 import jdc.zelda.entities.Player;
 import jdc.zelda.ui.GameMenu;
 
@@ -46,6 +47,7 @@ public class KeyboardCommands implements KeyListener {
 
         if (e.getKeyCode() == KeyEvent.VK_ENTER) {
             Game.restartGame = true;
+            NPC.showMessage = false;
         }
 
         if (e.getKeyCode() == KeyEvent.VK_Z) {

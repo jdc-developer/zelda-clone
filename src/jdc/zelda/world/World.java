@@ -44,9 +44,9 @@ public class World {
                             break;
                         case 0XFFFF0000:
                             //Enemy
-                            Enemy en = new Enemy(xx*16, yy*16, 40, 48, Game.enemySpritesheet.getSprite(0, 72, Enemy.WIDTH, Enemy.HEIGHT));
+                            /*Enemy en = new Enemy(xx*16, yy*16, 40, 48, Game.enemySpritesheet.getSprite(0, 72, Enemy.WIDTH, Enemy.HEIGHT));
                             Game.entities.add(en);
-                            Game.enemies.add(en);
+                            Game.enemies.add(en);*/
                             break;
                         case 0XFFFFA200:
                             //Weapon
@@ -54,9 +54,12 @@ public class World {
                             break;
                         case 0XFFEB76C3:
                             //Potion
-                            Potion potion = new Potion(xx*16, yy*16, 30, 30, Entity.LIFEPOTION_EN);
+                            /*Potion potion = new Potion(xx*16, yy*16, 30, 30, Entity.LIFEPOTION_EN);
                             potion.setMask(10, 10, 10f, 15f);
-                            Game.entities.add(potion);
+                            Game.entities.add(potion);*/
+
+                            NPC npc = new NPC(xx*16, yy*16, 15, 25, Game.npcSpritesheet.getSprite(214, 131, NPC.WIDTH, NPC.HEIGHT));
+                            Game.entities.add(npc);
                             break;
                         case 0XFFF8FB05:
                             //Ammo

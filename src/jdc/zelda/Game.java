@@ -2,10 +2,7 @@ package jdc.zelda;
 
 import jdc.zelda.commands.KeyboardCommands;
 import jdc.zelda.commands.MouseCommands;
-import jdc.zelda.entities.Bullet;
-import jdc.zelda.entities.Enemy;
-import jdc.zelda.entities.Entity;
-import jdc.zelda.entities.Player;
+import jdc.zelda.entities.*;
 import jdc.zelda.graphics.Pixel;
 import jdc.zelda.graphics.Spritesheet;
 import jdc.zelda.graphics.UI;
@@ -41,6 +38,7 @@ public class Game extends Canvas implements Runnable {
     public static List<Bullet> bullets;
     public static Spritesheet spritesheet;
     public static Spritesheet enemySpritesheet;
+    public static Spritesheet npcSpritesheet;
     public static Spritesheet tileset;
     public static Player player;
 
@@ -99,6 +97,7 @@ public class Game extends Canvas implements Runnable {
         bullets = new ArrayList<>();
         spritesheet = new Spritesheet("/spritesheet.png");
         enemySpritesheet = new Spritesheet("/enemies.png");
+        npcSpritesheet = new Spritesheet("/npc.png");
         tileset = new Spritesheet("/tileset.png");
         try {
             lightMap = ImageIO.read(getClass().getResourceAsStream("/light-map.png"));
@@ -109,6 +108,7 @@ public class Game extends Canvas implements Runnable {
         }
         player = new Player(0, 0, spritesheet.getSprite(0, 0, Player.WIDTH, Player.HEIGHT));
         world = new World("/level-3.png");
+
         //world = new World();
         entities.add(player);
         menu = new GameMenu();
