@@ -66,6 +66,8 @@ public class Player extends Entity {
     }
 
     public void tick() {
+        revealMap();
+
         moved = false;
         if (right && World.isFree((getX() + speed), getY())) {
             moved = true;
@@ -175,6 +177,24 @@ public class Player extends Entity {
         }
 
         updateCamera();
+    }
+
+    private void revealMap() {
+        int xx = (int) (x/16);
+        int yy = (int) (y/16);
+
+        World.getTiles()[xx-1+yy*World.WIDTH].show = true;
+        World.getTiles()[xx+yy*World.WIDTH].show = true;
+        World.getTiles()[xx+1+yy*World.WIDTH].show = true;
+
+        World.getTiles()[xx + ((yy+1)*World.WIDTH)].show = true;
+        World.getTiles()[xx + ((yy-1)*World.WIDTH)].show = true;
+
+        World.getTiles()[xx - 1 + ((yy-1)*World.WIDTH)].show = true;
+        World.getTiles()[xx + 1 + ((yy-1)*World.WIDTH)].show = true;
+
+        World.getTiles()[xx - 1 + ((yy+1)*World.WIDTH)].show = true;
+        World.getTiles()[xx + 1 + ((yy+1)*World.WIDTH)].show = true;
     }
 
     public void updateCamera() {
