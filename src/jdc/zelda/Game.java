@@ -6,6 +6,7 @@ import jdc.zelda.entities.Bullet;
 import jdc.zelda.entities.Enemy;
 import jdc.zelda.entities.Entity;
 import jdc.zelda.entities.Player;
+import jdc.zelda.graphics.Pixel;
 import jdc.zelda.graphics.Spritesheet;
 import jdc.zelda.graphics.UI;
 import jdc.zelda.sound.Sound;
@@ -68,6 +69,15 @@ public class Game extends Canvas implements Runnable {
     public static BufferedImage minimap;
     public static int[] minimapPixels;
 
+    public static Toolkit toolkit = Toolkit.getDefaultToolkit();
+
+    public static int entry = 1;
+    public static int start = 2;
+    public static int playing = 3;
+    public static int state = entry;
+
+    public int timeCena = 0, maxTimeCena = 60*3;
+
     public int xx, yy;
 
     /*public InputStream stream = ClassLoader.getSystemClassLoader().getResourceAsStream("angel-wish.ttf");
@@ -78,6 +88,7 @@ public class Game extends Canvas implements Runnable {
         //Sound.music.loop();
         rand = new Random();
         setPreferredSize(new Dimension(WIDTH * SCALE, HEIGHT * SCALE));
+        //setPreferredSize(toolkit.getScreenSize());
         initFrame();
         ui = new UI();
 
@@ -137,6 +148,7 @@ public class Game extends Canvas implements Runnable {
     public void initFrame() {
         frame = new JFrame("Zelda Clone");
         frame.add(this);
+        //frame.setUndecorated(true);
         frame.setResizable(false);
         frame.pack();
         frame.setLocationRelativeTo(null);
@@ -146,7 +158,6 @@ public class Game extends Canvas implements Runnable {
 
         try {
             Image iconImage = ImageIO.read(getClass().getResourceAsStream("/icon.png"));
-            Toolkit toolkit = Toolkit.getDefaultToolkit();
             Image image = toolkit.getImage(getClass().getResource("/icon.png"));
             Cursor c = toolkit.createCustomCursor(image, new Point(0, 0), "img");
             frame.setCursor(c);
@@ -189,15 +200,26 @@ public class Game extends Canvas implements Runnable {
             }
 
             Game.restartGame = false;
-            for(int i = 0; i < bullets.size(); i++) {
-                Bullet e = bullets.get(i);
-                e.tick();
+            if (state == playing) {
+                for(int i = 0; i < bullets.size(); i++) {
+                    Bullet e = bullets.get(i);
+                    e.tick();
+                }
+
+                for(int i = 0; i < entities.size(); i++) {
+                    Entity e = entities.get(i);
+                    e.tick();
+                }
+            } else if (state == entry) {
+                System.out.println(player.getY());
+                if (player.getY() < 200) {
+                    player.setY(player.getY()+1);
+                } else state = start;
+            } else if (state == start) {
+                timeCena++;
+                if (timeCena == maxTimeCena) state = playing;
             }
 
-            for(int i = 0; i < entities.size(); i++) {
-                Entity e = entities.get(i);
-                e.tick();
-            }
 
             /*if (enemies.isEmpty()) {
                 CUR_LEVEL++;
@@ -263,7 +285,7 @@ public class Game extends Canvas implements Runnable {
 
         //drawRectExmaple(xx, yy);
 
-        g.drawImage(image, 0, 0, WIDTH * SCALE, HEIGHT * SCALE, null);
+        g.drawImage(image, 0, 0, Game.WIDTH * Game.SCALE, Game.HEIGHT * Game.SCALE, null);
         g.setFont(new Font("arial", Font.BOLD, 17));
         g.setColor(Color.white);
         g.drawString("Munição: " + player.getAmmo(), 30, 20);
@@ -273,7 +295,7 @@ public class Game extends Canvas implements Runnable {
         Graphics2D g22 = (Graphics2D) g;
         if (gameState.equals("GAME_OVER")) {
             g22.setColor(new Color(0, 0, 0, 100));
-            g22.fillRect(0, 0, WIDTH * SCALE, HEIGHT * SCALE);
+            g22.fillRect(0, 0, Game.WIDTH * Game.SCALE, Game.HEIGHT * Game.SCALE);
             g22.setFont(new Font("arial", Font.BOLD, 38));
             g22.setColor(Color.white);
             g22.drawString("Game Over", (WIDTH * SCALE) / 2 - 100, (HEIGHT * SCALE) / 2 - 20);
@@ -284,6 +306,10 @@ public class Game extends Canvas implements Runnable {
             }
         } else if (gameState.equals("MENU")) {
             menu.render(g22);
+        }
+
+        if (state == start) {
+            g.drawString("Se prepare... O jogo vai começar", 50, 100);
         }
 
         World.renderMiniMap();
@@ -301,7 +327,8 @@ public class Game extends Canvas implements Runnable {
         for (int xx = 0; xx< WIDTH; xx++) {
             for (int yy = 0; yy < HEIGHT; yy++) {
                 if (lightMapPixels[xx+(yy * WIDTH)] == 0xffffffff) {
-                    pixels[xx+(yy * WIDTH)] = 0;
+                    int pixel = Pixel.getLightBlend(pixels[xx + yy * WIDTH], 0xFF5151, 0);
+                    pixels[xx+(yy * WIDTH)] = pixel;
                 }
             }
         }
